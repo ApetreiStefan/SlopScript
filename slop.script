@@ -1,0 +1,11 @@
+class Vector{
+    int a;
+}
+
+int Amogus(int a, int b){
+    return 0;
+}
+
+    Vector vec;
+SLOP{
+}
