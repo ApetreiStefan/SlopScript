@@ -67,25 +67,22 @@
 
 
 /* First part of user prologue.  */
-#line 3 "parser.y"
+#line 1 "parser.y"
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-// Funcție de ajutor pentru a afișa când o structură sintactică este recunoscută
 inline void log_syntax(const std::string& rule) {
     std::cout << "\t---> Sintaxa recunoscuta: " << rule << std::endl;
 }
 
-// Declaratia functiilor externe
 extern int yylex();
 void yyerror(const char *s);
-extern int yylineno; // Variabila Flex pentru numarul liniei
+extern int yylineno; 
 
-// Structura pentru a stoca rezultatul expresiilor (simplificat pentru demo sintactic)
 
-#line 89 "parser.tab.cpp"
+#line 86 "parser.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -571,15 +568,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    69,    69,    73,    74,    75,    76,    79,    83,    84,
-      85,    88,    92,    94,    98,   100,   104,   105,   106,   109,
-     112,   116,   117,   120,   121,   122,   123,   124,   125,   128,
-     132,   133,   134,   135,   136,   139,   140,   143,   144,   145,
-     146,   147,   148,   149,   152,   153,   157,   159,   163,   167,
-     171,   175,   177,   181,   183,   185,   189,   190,   191,   194,
-     198,   199,   200,   201,   202,   203,   204,   205,   208,   209,
-     210,   213,   214,   215,   218,   219,   220,   221,   222,   223,
-     224
+       0,    61,    61,    65,    66,    67,    68,    71,    75,    76,
+      77,    80,    84,    86,    90,    92,    96,    97,    98,   101,
+     104,   108,   109,   112,   113,   114,   115,   116,   117,   120,
+     124,   125,   126,   127,   128,   131,   132,   135,   136,   137,
+     138,   139,   140,   141,   144,   145,   149,   151,   155,   159,
+     163,   167,   169,   173,   175,   177,   181,   182,   183,   186,
+     190,   191,   192,   193,   194,   195,   196,   197,   200,   201,
+     202,   205,   206,   207,   210,   211,   212,   213,   214,   215,
+     216
 };
 #endif
 
@@ -1250,271 +1247,271 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: global_definitions main_block  */
-#line 70 "parser.y"
+#line 62 "parser.y"
        { log_syntax("Program complet recunoscut."); }
-#line 1256 "parser.tab.cpp"
+#line 1253 "parser.tab.cpp"
     break;
 
   case 7: /* class_definition: CLASS_KEY IDENTIFIER LBRACE class_body RBRACE  */
-#line 80 "parser.y"
+#line 72 "parser.y"
                 { log_syntax("Definitie Clasa: " + *((yyvsp[-3].strVal)) + " recunoscuta."); }
-#line 1262 "parser.tab.cpp"
+#line 1259 "parser.tab.cpp"
     break;
 
   case 11: /* field_declaration: data_type IDENTIFIER SEMICOLON  */
-#line 89 "parser.y"
+#line 81 "parser.y"
                  { log_syntax("Declaratie Camp/Field recunoscuta: " + *((yyvsp[-2].strVal)) + " " + *((yyvsp[-1].strVal))); }
-#line 1268 "parser.tab.cpp"
+#line 1265 "parser.tab.cpp"
     break;
 
   case 12: /* method_definition: data_type IDENTIFIER LPAREN parameter_list RPAREN block  */
-#line 93 "parser.y"
+#line 85 "parser.y"
                  { log_syntax("Definitie Metoda/Functie recunoscuta: " + *((yyvsp[-5].strVal)) + " " + *((yyvsp[-4].strVal))); }
-#line 1274 "parser.tab.cpp"
+#line 1271 "parser.tab.cpp"
     break;
 
   case 13: /* method_definition: VOID_TYPE IDENTIFIER LPAREN parameter_list RPAREN block  */
-#line 95 "parser.y"
+#line 87 "parser.y"
                  { log_syntax("Definitie Metoda/Functie VOID recunoscuta: " + *((yyvsp[-4].strVal))); }
-#line 1280 "parser.tab.cpp"
+#line 1277 "parser.tab.cpp"
     break;
 
   case 14: /* function_definition: data_type IDENTIFIER LPAREN parameter_list RPAREN block  */
-#line 99 "parser.y"
+#line 91 "parser.y"
                    { log_syntax("Definitie Functie recunoscuta: " + *((yyvsp[-5].strVal)) + " " + *((yyvsp[-4].strVal))); }
-#line 1286 "parser.tab.cpp"
+#line 1283 "parser.tab.cpp"
     break;
 
   case 15: /* function_definition: VOID_TYPE IDENTIFIER LPAREN parameter_list RPAREN block  */
-#line 101 "parser.y"
+#line 93 "parser.y"
                    { log_syntax("Definitie Functie VOID recunoscuta: " + *((yyvsp[-4].strVal))); }
-#line 1292 "parser.tab.cpp"
+#line 1289 "parser.tab.cpp"
     break;
 
   case 20: /* main_block: MAIN_KEY LBRACE no_decl_statement_list RBRACE  */
-#line 113 "parser.y"
+#line 105 "parser.y"
           { log_syntax("Blocul Main recunoscut."); }
-#line 1298 "parser.tab.cpp"
+#line 1295 "parser.tab.cpp"
     break;
 
   case 29: /* no_decl_block: LBRACE no_decl_statement_list RBRACE  */
-#line 129 "parser.y"
+#line 121 "parser.y"
          { log_syntax("Block recunoscut."); }
-#line 1304 "parser.tab.cpp"
+#line 1301 "parser.tab.cpp"
     break;
 
   case 30: /* data_type: INT_TYPE  */
-#line 132 "parser.y"
+#line 124 "parser.y"
                     { (yyval.strVal) = new std::string("int"); }
-#line 1310 "parser.tab.cpp"
+#line 1307 "parser.tab.cpp"
     break;
 
   case 31: /* data_type: FLOAT_TYPE  */
-#line 133 "parser.y"
+#line 125 "parser.y"
                       { (yyval.strVal) = new std::string("float"); }
-#line 1316 "parser.tab.cpp"
+#line 1313 "parser.tab.cpp"
     break;
 
   case 32: /* data_type: STRING_TYPE  */
-#line 134 "parser.y"
+#line 126 "parser.y"
                        { (yyval.strVal) = new std::string("string"); }
-#line 1322 "parser.tab.cpp"
+#line 1319 "parser.tab.cpp"
     break;
 
   case 33: /* data_type: BOOL_TYPE  */
-#line 135 "parser.y"
+#line 127 "parser.y"
                      { (yyval.strVal) = new std::string("bool"); }
-#line 1328 "parser.tab.cpp"
+#line 1325 "parser.tab.cpp"
     break;
 
   case 45: /* local_variable_declaration: data_type IDENTIFIER ASSIGN expression  */
-#line 154 "parser.y"
+#line 146 "parser.y"
                           { log_syntax("Declaratie Variabila Locala recunoscuta."); }
-#line 1334 "parser.tab.cpp"
+#line 1331 "parser.tab.cpp"
     break;
 
   case 46: /* assignment_statement: IDENTIFIER ASSIGN expression  */
-#line 158 "parser.y"
+#line 150 "parser.y"
                     { log_syntax("Assignment simplu recunoscut: " + *((yyvsp[-2].strVal))); }
-#line 1340 "parser.tab.cpp"
+#line 1337 "parser.tab.cpp"
     break;
 
   case 47: /* assignment_statement: object_access ASSIGN expression  */
-#line 160 "parser.y"
+#line 152 "parser.y"
                     { log_syntax("Assignment cu Object Access recunoscut."); }
-#line 1346 "parser.tab.cpp"
+#line 1343 "parser.tab.cpp"
     break;
 
   case 48: /* if_statement: IF_KEY LPAREN boolean_expression RPAREN no_decl_block  */
-#line 164 "parser.y"
+#line 156 "parser.y"
             { log_syntax("If statement recunoscut."); }
-#line 1352 "parser.tab.cpp"
+#line 1349 "parser.tab.cpp"
     break;
 
   case 49: /* while_statement: WHILE_KEY LPAREN boolean_expression RPAREN no_decl_block  */
-#line 168 "parser.y"
+#line 160 "parser.y"
                { log_syntax("While statement recunoscut."); }
-#line 1358 "parser.tab.cpp"
+#line 1355 "parser.tab.cpp"
     break;
 
   case 50: /* block: LBRACE statement_list RBRACE  */
-#line 172 "parser.y"
+#line 164 "parser.y"
      { log_syntax("Block recunoscut."); }
-#line 1364 "parser.tab.cpp"
+#line 1361 "parser.tab.cpp"
     break;
 
   case 51: /* return_statement: RETURN_KEY expression  */
-#line 176 "parser.y"
+#line 168 "parser.y"
                 { log_syntax("Return cu expresie recunoscut."); }
-#line 1370 "parser.tab.cpp"
+#line 1367 "parser.tab.cpp"
     break;
 
   case 52: /* return_statement: RETURN_KEY  */
-#line 178 "parser.y"
+#line 170 "parser.y"
                 { log_syntax("Return VOID recunoscut."); }
-#line 1376 "parser.tab.cpp"
+#line 1373 "parser.tab.cpp"
     break;
 
   case 53: /* function_call_statement: IDENTIFIER LPAREN argument_list RPAREN  */
-#line 182 "parser.y"
+#line 174 "parser.y"
                        { log_syntax("Apel Functie simpla recunoscut: " + *((yyvsp[-3].strVal))); }
-#line 1382 "parser.tab.cpp"
+#line 1379 "parser.tab.cpp"
     break;
 
   case 54: /* function_call_statement: PRINT_CALL LPAREN expression RPAREN  */
-#line 184 "parser.y"
+#line 176 "parser.y"
                        { log_syntax("Apel Print(expr) recunoscut."); }
-#line 1388 "parser.tab.cpp"
+#line 1385 "parser.tab.cpp"
     break;
 
   case 55: /* function_call_statement: object_access LPAREN argument_list RPAREN  */
-#line 186 "parser.y"
+#line 178 "parser.y"
                        { log_syntax("Apel Metoda recunoscut."); }
-#line 1394 "parser.tab.cpp"
+#line 1391 "parser.tab.cpp"
     break;
 
   case 59: /* object_access: IDENTIFIER DOT IDENTIFIER  */
-#line 195 "parser.y"
+#line 187 "parser.y"
              { log_syntax("Object Access (obj.field/method) recunoscut: " + *((yyvsp[-2].strVal)) + "." + *((yyvsp[0].strVal))); }
-#line 1400 "parser.tab.cpp"
+#line 1397 "parser.tab.cpp"
     break;
 
   case 60: /* boolean_expression: expression OP_LT expression  */
-#line 198 "parser.y"
+#line 190 "parser.y"
                                                 { log_syntax("Expresie Bool: <"); }
-#line 1406 "parser.tab.cpp"
+#line 1403 "parser.tab.cpp"
     break;
 
   case 61: /* boolean_expression: expression OP_GT expression  */
-#line 199 "parser.y"
+#line 191 "parser.y"
                                                 { log_syntax("Expresie Bool: >"); }
-#line 1412 "parser.tab.cpp"
+#line 1409 "parser.tab.cpp"
     break;
 
   case 62: /* boolean_expression: expression OP_EQ expression  */
-#line 200 "parser.y"
+#line 192 "parser.y"
                                                 { log_syntax("Expresie Bool: =="); }
-#line 1418 "parser.tab.cpp"
+#line 1415 "parser.tab.cpp"
     break;
 
   case 63: /* boolean_expression: expression OP_NEQ expression  */
-#line 201 "parser.y"
+#line 193 "parser.y"
                                                  { log_syntax("Expresie Bool: !="); }
-#line 1424 "parser.tab.cpp"
+#line 1421 "parser.tab.cpp"
     break;
 
   case 64: /* boolean_expression: boolean_expression OP_AND boolean_expression  */
-#line 202 "parser.y"
+#line 194 "parser.y"
                                                                  { log_syntax("Expresie Bool: &&"); }
-#line 1430 "parser.tab.cpp"
+#line 1427 "parser.tab.cpp"
     break;
 
   case 65: /* boolean_expression: boolean_expression OP_OR boolean_expression  */
-#line 203 "parser.y"
+#line 195 "parser.y"
                                                                 { log_syntax("Expresie Bool: ||"); }
-#line 1436 "parser.tab.cpp"
+#line 1433 "parser.tab.cpp"
     break;
 
   case 66: /* boolean_expression: LPAREN boolean_expression RPAREN  */
-#line 204 "parser.y"
+#line 196 "parser.y"
                                                      { (yyval.exprVal) = (yyvsp[-1].exprVal); log_syntax("Expresie Bool: Paranteze"); }
-#line 1442 "parser.tab.cpp"
+#line 1439 "parser.tab.cpp"
     break;
 
   case 67: /* boolean_expression: BOOL_LITERAL  */
-#line 205 "parser.y"
+#line 197 "parser.y"
                                  { log_syntax("Expresie Bool: Literal"); ; (yyval.exprVal) = NULL;}
-#line 1448 "parser.tab.cpp"
+#line 1445 "parser.tab.cpp"
     break;
 
   case 68: /* expression: expression OP_ADD term  */
-#line 208 "parser.y"
+#line 200 "parser.y"
                                    { log_syntax("Expresie: +"); }
-#line 1454 "parser.tab.cpp"
+#line 1451 "parser.tab.cpp"
     break;
 
   case 69: /* expression: expression OP_SUB term  */
-#line 209 "parser.y"
+#line 201 "parser.y"
                                    { log_syntax("Expresie: -"); }
-#line 1460 "parser.tab.cpp"
+#line 1457 "parser.tab.cpp"
     break;
 
   case 71: /* term: term OP_MUL factor  */
-#line 213 "parser.y"
+#line 205 "parser.y"
                          { log_syntax("Expresie: *"); }
-#line 1466 "parser.tab.cpp"
+#line 1463 "parser.tab.cpp"
     break;
 
   case 72: /* term: term OP_DIV factor  */
-#line 214 "parser.y"
+#line 206 "parser.y"
                          { log_syntax("Expresie: /"); }
-#line 1472 "parser.tab.cpp"
+#line 1469 "parser.tab.cpp"
     break;
 
   case 74: /* factor: IDENTIFIER  */
-#line 218 "parser.y"
+#line 210 "parser.y"
                    { log_syntax("Expresie: Identificator"); (yyval.exprVal) = NULL; }
-#line 1478 "parser.tab.cpp"
+#line 1475 "parser.tab.cpp"
     break;
 
   case 75: /* factor: object_access  */
-#line 219 "parser.y"
+#line 211 "parser.y"
                       { log_syntax("Expresie: Acces Obiect"); }
-#line 1484 "parser.tab.cpp"
+#line 1481 "parser.tab.cpp"
     break;
 
   case 76: /* factor: INTEGER_LITERAL  */
-#line 220 "parser.y"
+#line 212 "parser.y"
                         { log_syntax("Expresie: Literal Int"); }
-#line 1490 "parser.tab.cpp"
+#line 1487 "parser.tab.cpp"
     break;
 
   case 77: /* factor: FLOAT_LITERAL  */
-#line 221 "parser.y"
+#line 213 "parser.y"
                       { log_syntax("Expresie: Literal Float"); }
-#line 1496 "parser.tab.cpp"
+#line 1493 "parser.tab.cpp"
     break;
 
   case 78: /* factor: STRING_LITERAL  */
-#line 222 "parser.y"
+#line 214 "parser.y"
                        { log_syntax("Expresie: Literal String"); }
-#line 1502 "parser.tab.cpp"
+#line 1499 "parser.tab.cpp"
     break;
 
   case 79: /* factor: function_call_statement  */
-#line 223 "parser.y"
+#line 215 "parser.y"
                                 { log_syntax("Expresie: Apel Functie"); }
-#line 1508 "parser.tab.cpp"
+#line 1505 "parser.tab.cpp"
     break;
 
   case 80: /* factor: LPAREN expression RPAREN  */
-#line 224 "parser.y"
+#line 216 "parser.y"
                                  { (yyval.exprVal) = (yyvsp[-1].exprVal); log_syntax("Factor: Paranteze"); }
-#line 1514 "parser.tab.cpp"
+#line 1511 "parser.tab.cpp"
     break;
 
 
-#line 1518 "parser.tab.cpp"
+#line 1515 "parser.tab.cpp"
 
       default: break;
     }
@@ -1707,7 +1704,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 227 "parser.y"
+#line 219 "parser.y"
 
 
 void yyerror(const char *s) {

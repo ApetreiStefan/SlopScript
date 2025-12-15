@@ -45,7 +45,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 24 "parser.y"
+#line 16 "parser.y"
 
     #include <string>
     #include <iostream>
@@ -113,12 +113,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 37 "parser.y"
+#line 29 "parser.y"
 
-    std::string* strVal; // Pentru Identificatori, Literali string
-    int intVal;          // Pentru Literali int
-    float floatVal;      // Pentru Literali float
-    ExpressionValue* exprVal; // Pentru expresii
+    std::string* strVal;
+    int intVal;
+    float floatVal;
+    ExpressionValue* exprVal;
 
 #line 124 "parser.tab.hpp"
 

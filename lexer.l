@@ -57,7 +57,7 @@ letter  [a-zA-Z]
 ","         { return COMMA; }
 
 {digit}+    { yylval.intVal = atoi(yytext); return INTEGER_LITERAL; }
-{digit}*"."{digit}+([Ee][+-]?{digit}+)? { yylval.floatVal = atof(yytext); return FLOAT_LITERAL; }
+{digit}+"."{digit}+ { yylval.floatVal = atof(yytext); return FLOAT_LITERAL; }
 
 \"(\\.|[^\\"])*\" {
 
@@ -71,10 +71,10 @@ letter  [a-zA-Z]
     return IDENTIFIER;
 }
 
-[ \t\r]+    { /* Ignora */ }
+[ \t\r]+    { /* empty */ }
 \n          { yylineno++; }
 
-"//".* { /* Ignora */ }
+"//".* { /* empty */ }
 
 .           {
     std::cerr << "!!! Caracter ilegal la linia " << yylineno << ": '" << yytext << "'" << std::endl;

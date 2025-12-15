@@ -6,6 +6,7 @@ int Amogus(int a, int b){
     return 0;
 }
 
-    Vector vec;
+Vector vec;
 SLOP{
+    return;
 }

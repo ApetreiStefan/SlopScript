@@ -1,26 +1,18 @@
-// parser.y
-
 %{
 #include <iostream>
 #include <string>
 #include <vector>
 
-// Funcție de ajutor pentru a afișa când o structură sintactică este recunoscută
 inline void log_syntax(const std::string& rule) {
     std::cout << "\t---> Sintaxa recunoscuta: " << rule << std::endl;
 }
 
-// Declaratia functiilor externe
 extern int yylex();
 void yyerror(const char *s);
-extern int yylineno; // Variabila Flex pentru numarul liniei
+extern int yylineno; 
 
-// Structura pentru a stoca rezultatul expresiilor (simplificat pentru demo sintactic)
 %}
 
-// -----------------------------------------------------
-// Definitia Stivei de Valori (Union)
-// -----------------------------------------------------
 %code requires {
     #include <string>
     #include <iostream>
@@ -33,12 +25,12 @@ extern int yylineno; // Variabila Flex pentru numarul liniei
         ExpressionValue(const std::string& t, const std::string& v) : type(t), value(v) {}
     };
 }
-// Aceasta defineste ce tipuri de date pot fi stocate in simbolurile de pe stiva parserului
+
 %union {
-    std::string* strVal; // Pentru Identificatori, Literali string
-    int intVal;          // Pentru Literali int
-    float floatVal;      // Pentru Literali float
-    ExpressionValue* exprVal; // Pentru expresii
+    std::string* strVal;
+    int intVal;
+    float floatVal;
+    ExpressionValue* exprVal;
 }
 
 %token <strVal> INT_TYPE FLOAT_TYPE STRING_TYPE BOOL_TYPE CLASS_KEY IF_KEY WHILE_KEY
