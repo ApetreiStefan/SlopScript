@@ -2,28 +2,28 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
-inline void log_syntax(const std::string& rule) {
-    std::cout << "\t---> Sintaxa recunoscuta: " << rule << std::endl;
-}
+#include "SymbolTable.hpp"
 
 extern int yylex();
 void yyerror(const char *s);
 extern int yylineno; 
 
+SymbolTable* globalTable = new SymbolTable(nullptr, "global");
+SymbolTable* currentTable = globalTable;
+
 %}
 
 %code requires {
-    #include <string>
-    #include <iostream>
-
+#include <iostream>
+#include <string>
     struct ExpressionValue {
-        std::string type;
-        std::string value;
+    std::string type;
+    std::string value;
 
-        ExpressionValue() : type("void"), value("") {}
-        ExpressionValue(const std::string& t, const std::string& v) : type(t), value(v) {}
-    };
+    ExpressionValue() : type("void"), value("") {}
+    ExpressionValue(const std::string& t, const std::string& v) : type(t), value(v) {}
+};
+    
 }
 
 %union {
@@ -63,9 +63,9 @@ program: global_definitions main_block
        ;
 
 global_definitions: global_definitions class_definition
+                  | global_definitions variable_definition
                   | global_definitions function_definition
-                  | global_definitions field_declaration
-                  | /* empty */
+                  | /* empty */ 
                   ;
 
 class_definition: CLASS_KEY IDENTIFIER LBRACE class_body RBRACE
@@ -76,6 +76,13 @@ class_body: class_body field_declaration
           | class_body method_definition
           | /* empty */
           ;
+
+variable_definition: data_type IDENTIFIER SEMICOLON
+                   { log_syntax("Declaratie Variabila recunoscuta: " + *($1) + " " + *($2)); 
+                   if (!currentTable->insert(*$2, *$1, "variable")) {
+                   yyerror("Eroare: Variabila deja declarata!");}
+                   }
+                   ;
 
 field_declaration: data_type IDENTIFIER SEMICOLON
                  { log_syntax("Declaratie Camp/Field recunoscuta: " + *($1) + " " + *($2)); }
@@ -88,9 +95,15 @@ method_definition: data_type IDENTIFIER LPAREN parameter_list RPAREN block
                  ;
 
 function_definition: data_type IDENTIFIER LPAREN parameter_list RPAREN block
-                   { log_syntax("Definitie Functie recunoscuta: " + *($1) + " " + *($2)); }
+                   { log_syntax("Definitie Functie recunoscuta: " + *($1) + " " + *($2)); 
+                     SymbolTable* newScope = new SymbolTable(currentTable, "func_" + *$2);
+                     currentTable = newScope;
+                   }
                    | VOID_TYPE IDENTIFIER LPAREN parameter_list RPAREN block
-                   { log_syntax("Definitie Functie VOID recunoscuta: " + *($2)); }
+                   { log_syntax("Definitie Functie VOID recunoscuta: " + *($2)); 
+                     SymbolTable* newScope = new SymbolTable(currentTable, "func_" + *$2);
+                     currentTable = newScope;
+                   }
                    ;
 
 parameter_list: parameter

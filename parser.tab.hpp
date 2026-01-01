@@ -47,16 +47,16 @@ extern int yydebug;
 /* "%code requires" blocks.  */
 #line 16 "parser.y"
 
-    #include <string>
-    #include <iostream>
-
+#include <iostream>
+#include <string>
     struct ExpressionValue {
-        std::string type;
-        std::string value;
+    std::string type;
+    std::string value;
 
-        ExpressionValue() : type("void"), value("") {}
-        ExpressionValue(const std::string& t, const std::string& v) : type(t), value(v) {}
-    };
+    ExpressionValue() : type("void"), value("") {}
+    ExpressionValue(const std::string& t, const std::string& v) : type(t), value(v) {}
+};
+    
 
 #line 62 "parser.tab.hpp"
 

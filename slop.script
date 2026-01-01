@@ -8,5 +8,6 @@ int Amogus(int a, int b){
 
 Vector vec;
 SLOP{
+    int a;
     return;
 }
