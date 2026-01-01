@@ -45,20 +45,12 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 16 "parser.y"
+#line 20 "parser.y"
 
-#include <iostream>
-#include <string>
-    struct ExpressionValue {
-    std::string type;
-    std::string value;
+#include <vector>
 
-    ExpressionValue() : type("void"), value("") {}
-    ExpressionValue(const std::string& t, const std::string& v) : type(t), value(v) {}
-};
-    
 
-#line 62 "parser.tab.hpp"
+#line 54 "parser.tab.hpp"
 
 /* Token kinds.  */
 #ifndef YYTOKENTYPE
@@ -113,14 +105,15 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 29 "parser.y"
+#line 25 "parser.y"
 
     std::string* strVal;
     int intVal;
     float floatVal;
-    ExpressionValue* exprVal;
+    class ASTNode* astPtr; 
+    std::vector<std::string>* typeList;
 
-#line 124 "parser.tab.hpp"
+#line 117 "parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;

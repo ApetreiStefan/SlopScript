@@ -1,5 +1,8 @@
 class Vector{
     int a;
+    int func(int ligma){
+        return ligma;
+    }
 }
 
 int Amogus(int a, int b){
@@ -7,7 +10,13 @@ int Amogus(int a, int b){
 }
 
 Vector vec;
+int a;
+int b;
+
 SLOP{
-    int a;
+    Amogus(2,0);
+    vec.a = 3 - 2;
+    vec.func(3);
+    Print(3 * 2 + 1);
     return;
 }

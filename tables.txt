@@ -1,0 +1,52 @@
+
+==================================================
+SCOPE: global | PARENT: None
+--------------------------------------------------
+Name|Category|Type|Extra Info
+--------------------------------------------------
+Amogus|function|int|Params: (int, int)
+Vector|class|Vector|
+a|variable|int|
+b|variable|int|
+vec|variable|Vector|
+
+==================================================
+SCOPE: class_Vector | PARENT: global
+--------------------------------------------------
+Name|Category|Type|Extra Info
+--------------------------------------------------
+a|field|int|
+func|method|int|Params: (int)
+
+==================================================
+SCOPE: method_func | PARENT: class_Vector
+--------------------------------------------------
+Name|Category|Type|Extra Info
+--------------------------------------------------
+ligma|parameter|int|
+
+==================================================
+SCOPE: block_3 | PARENT: method_func
+--------------------------------------------------
+Name|Category|Type|Extra Info
+--------------------------------------------------
+
+==================================================
+SCOPE: func_Amogus | PARENT: global
+--------------------------------------------------
+Name|Category|Type|Extra Info
+--------------------------------------------------
+a|parameter|int|
+b|parameter|int|
+
+==================================================
+SCOPE: block_8 | PARENT: func_Amogus
+--------------------------------------------------
+Name|Category|Type|Extra Info
+--------------------------------------------------
+
+==================================================
+SCOPE: main | PARENT: global
+--------------------------------------------------
+Name|Category|Type|Extra Info
+--------------------------------------------------

@@ -70,19 +70,23 @@
 #line 1 "parser.y"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
+#include <map>
 #include "SymbolTable.hpp"
+#include "AST.hpp" // Presupunem că aici ai clasa ASTNode cu std::cout în evaluate
 
 extern int yylex();
 void yyerror(const char *s);
 extern int yylineno; 
 
-SymbolTable* globalTable = new SymbolTable(nullptr, "global");
-SymbolTable* currentTable = globalTable;
+void finalize_program() {
+    printAllTables();
+    std::cout << "\n[Sistem] Executie si evaluare AST finalizate." << std::endl;
+}
 
-
-#line 86 "parser.tab.cpp"
+#line 90 "parser.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -153,33 +157,44 @@ enum yysymbol_kind_t
   YYSYMBOL_program = 40,                   /* program  */
   YYSYMBOL_global_definitions = 41,        /* global_definitions  */
   YYSYMBOL_class_definition = 42,          /* class_definition  */
-  YYSYMBOL_class_body = 43,                /* class_body  */
-  YYSYMBOL_variable_definition = 44,       /* variable_definition  */
-  YYSYMBOL_field_declaration = 45,         /* field_declaration  */
-  YYSYMBOL_method_definition = 46,         /* method_definition  */
-  YYSYMBOL_function_definition = 47,       /* function_definition  */
-  YYSYMBOL_parameter_list = 48,            /* parameter_list  */
-  YYSYMBOL_parameter = 49,                 /* parameter  */
-  YYSYMBOL_main_block = 50,                /* main_block  */
-  YYSYMBOL_no_decl_statement_list = 51,    /* no_decl_statement_list  */
-  YYSYMBOL_no_decl_statement = 52,         /* no_decl_statement  */
-  YYSYMBOL_no_decl_block = 53,             /* no_decl_block  */
-  YYSYMBOL_data_type = 54,                 /* data_type  */
-  YYSYMBOL_statement_list = 55,            /* statement_list  */
-  YYSYMBOL_statement = 56,                 /* statement  */
-  YYSYMBOL_local_variable_declaration = 57, /* local_variable_declaration  */
-  YYSYMBOL_assignment_statement = 58,      /* assignment_statement  */
-  YYSYMBOL_if_statement = 59,              /* if_statement  */
-  YYSYMBOL_while_statement = 60,           /* while_statement  */
-  YYSYMBOL_block = 61,                     /* block  */
-  YYSYMBOL_return_statement = 62,          /* return_statement  */
-  YYSYMBOL_function_call_statement = 63,   /* function_call_statement  */
-  YYSYMBOL_argument_list = 64,             /* argument_list  */
-  YYSYMBOL_object_access = 65,             /* object_access  */
-  YYSYMBOL_boolean_expression = 66,        /* boolean_expression  */
-  YYSYMBOL_expression = 67,                /* expression  */
-  YYSYMBOL_term = 68,                      /* term  */
-  YYSYMBOL_factor = 69                     /* factor  */
+  YYSYMBOL_43_1 = 43,                      /* $@1  */
+  YYSYMBOL_class_body = 44,                /* class_body  */
+  YYSYMBOL_variable_definition = 45,       /* variable_definition  */
+  YYSYMBOL_field_declaration = 46,         /* field_declaration  */
+  YYSYMBOL_method_definition = 47,         /* method_definition  */
+  YYSYMBOL_48_2 = 48,                      /* $@2  */
+  YYSYMBOL_49_3 = 49,                      /* $@3  */
+  YYSYMBOL_50_4 = 50,                      /* $@4  */
+  YYSYMBOL_51_5 = 51,                      /* $@5  */
+  YYSYMBOL_function_definition = 52,       /* function_definition  */
+  YYSYMBOL_53_6 = 53,                      /* $@6  */
+  YYSYMBOL_54_7 = 54,                      /* $@7  */
+  YYSYMBOL_55_8 = 55,                      /* $@8  */
+  YYSYMBOL_56_9 = 56,                      /* $@9  */
+  YYSYMBOL_parameter_list = 57,            /* parameter_list  */
+  YYSYMBOL_parameter = 58,                 /* parameter  */
+  YYSYMBOL_main_block = 59,                /* main_block  */
+  YYSYMBOL_60_10 = 60,                     /* $@10  */
+  YYSYMBOL_no_decl_statement_list = 61,    /* no_decl_statement_list  */
+  YYSYMBOL_no_decl_statement = 62,         /* no_decl_statement  */
+  YYSYMBOL_no_decl_block = 63,             /* no_decl_block  */
+  YYSYMBOL_data_type = 64,                 /* data_type  */
+  YYSYMBOL_statement_list = 65,            /* statement_list  */
+  YYSYMBOL_statement = 66,                 /* statement  */
+  YYSYMBOL_local_variable_declaration = 67, /* local_variable_declaration  */
+  YYSYMBOL_assignment_statement = 68,      /* assignment_statement  */
+  YYSYMBOL_if_statement = 69,              /* if_statement  */
+  YYSYMBOL_while_statement = 70,           /* while_statement  */
+  YYSYMBOL_block = 71,                     /* block  */
+  YYSYMBOL_72_11 = 72,                     /* $@11  */
+  YYSYMBOL_return_statement = 73,          /* return_statement  */
+  YYSYMBOL_function_call_statement = 74,   /* function_call_statement  */
+  YYSYMBOL_argument_list = 75,             /* argument_list  */
+  YYSYMBOL_object_access = 76,             /* object_access  */
+  YYSYMBOL_boolean_expression = 77,        /* boolean_expression  */
+  YYSYMBOL_expression = 78,                /* expression  */
+  YYSYMBOL_term = 79,                      /* term  */
+  YYSYMBOL_factor = 80                     /* factor  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -507,16 +522,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  3
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   187
+#define YYLAST   183
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  39
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  31
+#define YYNNTS  42
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  81
+#define YYNRULES  91
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  158
+#define YYNSTATES  169
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   293
@@ -567,17 +582,18 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint8 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,    61,    61,    65,    66,    67,    68,    71,    75,    76,
-      77,    80,    87,    91,    93,    97,   102,   109,   110,   111,
-     114,   117,   121,   122,   125,   126,   127,   128,   129,   130,
-     133,   137,   138,   139,   140,   141,   144,   145,   148,   149,
-     150,   151,   152,   153,   154,   157,   158,   162,   164,   168,
-     172,   176,   180,   182,   186,   188,   190,   194,   195,   196,
-     199,   203,   204,   205,   206,   207,   208,   209,   210,   213,
-     214,   215,   218,   219,   220,   223,   224,   225,   226,   227,
-     228,   229
+       0,    57,    57,    64,    65,    66,    67,    70,    70,    82,
+      83,    84,    87,    94,   101,   103,   101,   110,   112,   110,
+     121,   123,   121,   130,   132,   130,   141,   146,   152,   157,
+     164,   164,   173,   174,   177,   181,   185,   186,   187,   188,
+     189,   197,   201,   202,   203,   204,   205,   208,   209,   212,
+     213,   214,   215,   216,   217,   218,   221,   223,   232,   239,
+     247,   251,   255,   255,   264,   266,   270,   276,   283,   288,
+     294,   299,   306,   307,   308,   309,   310,   311,   312,   313,
+     316,   317,   318,   321,   322,   323,   326,   332,   333,   338,
+     343,   344
 };
 #endif
 
@@ -600,15 +616,15 @@ static const char *const yytname[] =
   "OP_EQ", "OP_NEQ", "OP_AND", "OP_OR", "SEMICOLON", "LPAREN", "RPAREN",
   "LBRACE", "RBRACE", "LBRACKET", "RBRACKET", "DOT", "COMMA", "IDENTIFIER",
   "INTEGER_LITERAL", "FLOAT_LITERAL", "STRING_LITERAL", "BOOL_LITERAL",
-  "$accept", "program", "global_definitions", "class_definition",
+  "$accept", "program", "global_definitions", "class_definition", "$@1",
   "class_body", "variable_definition", "field_declaration",
-  "method_definition", "function_definition", "parameter_list",
-  "parameter", "main_block", "no_decl_statement_list", "no_decl_statement",
-  "no_decl_block", "data_type", "statement_list", "statement",
-  "local_variable_declaration", "assignment_statement", "if_statement",
-  "while_statement", "block", "return_statement",
-  "function_call_statement", "argument_list", "object_access",
-  "boolean_expression", "expression", "term", "factor", YY_NULLPTR
+  "method_definition", "$@2", "$@3", "$@4", "$@5", "function_definition",
+  "$@6", "$@7", "$@8", "$@9", "parameter_list", "parameter", "main_block",
+  "$@10", "no_decl_statement_list", "no_decl_statement", "no_decl_block",
+  "data_type", "statement_list", "statement", "local_variable_declaration",
+  "assignment_statement", "if_statement", "while_statement", "block",
+  "$@11", "return_statement", "function_call_statement", "argument_list",
+  "object_access", "boolean_expression", "expression", "term", "factor", YY_NULLPTR
 };
 
 static const char *
@@ -618,7 +634,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-50)
+#define YYPACT_NINF (-78)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -632,22 +648,23 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-     -50,     6,     8,   -50,   -50,   -50,   -50,   -50,   -31,   -26,
-     -12,   -50,   -50,   -50,   -50,   -50,   -13,    11,    22,   -50,
-       0,   -50,    31,    53,   -50,    31,    94,   -10,   -50,    26,
-      38,    60,   114,    80,   -50,   -50,    57,   -50,    83,   -50,
-     -50,   -50,    86,    91,    -4,    -3,    90,   -50,   -50,   -50,
-     100,    92,    31,   -50,   109,   109,   114,    47,   -50,   -50,
-     -50,   -50,   113,   103,    59,   -50,   114,    46,   114,   114,
-     126,   -50,   -50,   -50,   114,   114,    92,   143,   111,   -50,
-     -50,   109,   -50,    61,   146,   102,    16,   114,   114,   114,
-     114,    42,   -50,    57,   129,   -50,   148,   150,   -50,   -50,
-     -50,   151,   152,   103,    45,   103,   -50,   103,    68,   -50,
-      31,   -50,    31,   147,   137,   109,   109,   144,   114,   114,
-     114,   114,   144,   -50,    59,    59,   -50,   -50,   -50,   164,
-     -50,   -50,   -50,   -50,   -50,   114,   -50,    77,    82,   -50,
-     155,   -50,   -50,   -50,   103,   103,   103,   103,   -50,   114,
-     103,    92,    92,   104,   103,   -50,   -50,   -50
+     -78,    12,    17,   -78,   -78,   -78,   -78,   -78,    15,    31,
+      -1,   -78,   -78,   -78,   -78,   -78,    66,    76,    83,   -78,
+      -9,   -78,   -78,   -78,   -78,   -78,   -78,    56,    64,    56,
+      42,     3,   -78,    86,   115,   117,    60,   130,   -78,   -78,
+      26,   -78,    96,   -78,   -78,   -78,   127,   132,    -7,    58,
+     128,   -78,   -78,   -78,   129,   -78,    56,   -78,    99,    99,
+      60,    73,   -78,   -78,   -78,   135,    54,    24,   -78,    60,
+     -78,    60,    60,   133,   -78,   -78,   -78,    60,    60,   -78,
+     138,    81,   137,   -78,    99,   -78,   124,   108,   126,    39,
+      60,    60,    60,    60,    48,     5,    54,   109,    54,   -78,
+      54,   111,   137,   -78,   -78,   -78,   -78,   131,    95,    99,
+      99,   140,    60,    60,    60,    60,   140,   -78,    24,    24,
+     -78,   -78,   141,   -78,    26,   136,   -78,   144,   146,   -78,
+     -78,   -78,   147,   148,   -78,    60,   -78,   -78,    56,    56,
+     -78,   150,   -78,   -78,   -78,    54,    54,    54,    54,   -78,
+     -78,   161,   -78,   -78,   -78,   -78,    54,   112,   113,    74,
+      60,   -78,   -78,   -78,    54,   137,   137,   -78,   -78
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -655,40 +672,43 @@ static const yytype_int16 yypact[] =
    means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       6,     0,     0,     1,    31,    32,    33,    34,     0,     0,
-       0,    35,     3,     4,     5,     2,     0,     0,     0,    23,
-       0,    10,    19,     0,    11,    19,     0,     0,    17,     0,
-       0,     0,    53,     0,    37,    21,     0,    22,     0,    26,
-      27,    28,     0,     0,     0,     0,     0,     7,     8,     9,
-       0,     0,     0,    20,     0,     0,     0,    75,    77,    78,
-      79,    80,    76,    52,    71,    74,     0,     0,     0,    59,
-       0,    24,    29,    25,     0,    59,     0,     0,     0,    16,
-      18,     0,    68,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,    51,    35,     0,    36,     0,     0,    40,    41,
-      42,     0,     0,    47,     0,    57,    60,    48,     0,    15,
-      19,    12,    19,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    81,    69,    70,    72,    73,    55,    45,
-      44,    38,    43,    39,    54,     0,    56,     0,     0,    67,
-      65,    66,    23,    49,    61,    62,    63,    64,    50,     0,
-      58,     0,     0,     0,    46,    14,    13,    30
+       6,     0,     0,     1,    42,    43,    44,    45,     0,     0,
+       0,    46,     3,     4,     5,     2,     0,     0,     0,    30,
+       0,     7,    23,    33,    12,    20,    11,    28,     0,    28,
+       0,     0,    26,     0,     0,     0,    65,     0,    62,    31,
+       0,    32,     0,    36,    37,    38,     0,     0,     0,     0,
+       0,     8,     9,    10,     0,    24,     0,    29,     0,     0,
+       0,    86,    88,    89,    90,    87,    64,    82,    85,     0,
+      48,     0,    70,     0,    34,    39,    35,     0,    70,    21,
+       0,     0,     0,    27,     0,    79,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,    58,     0,    68,    71,
+      59,     0,     0,    17,    13,    14,    25,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    91,    80,    81,
+      83,    84,     0,    63,    46,     0,    47,     0,     0,    51,
+      52,    53,     0,     0,    66,     0,    67,    22,    28,    28,
+      78,    76,    77,    33,    60,    72,    73,    74,    75,    61,
+      40,    56,    55,    49,    54,    50,    69,     0,     0,     0,
+       0,    18,    15,    41,    57,     0,     0,    19,    16
 };
 
 /* YYPGOTO[NTERM-NUM].  */
-static const yytype_int16 yypgoto[] =
+static const yytype_int8 yypgoto[] =
 {
-     -50,   -50,   -50,   -50,   -50,   -50,   -50,   -50,   -50,   -16,
-     128,   -50,    39,   -50,    62,     3,   -50,   -50,   -50,   115,
-     116,   118,   -49,   119,   -23,   112,   -22,   -48,   -28,    54,
-      65
+     -78,   -78,   -78,   -78,   -78,   -78,   -78,   -78,   -78,   -78,
+     -78,   -78,   -78,   -78,   -78,   -78,   -78,   -78,   -26,   120,
+     -78,   -78,    34,   -78,    62,     2,   -78,   -78,   -78,    84,
+      85,    87,   -77,   -78,    88,   -28,   103,   -27,   -53,   -34,
+      28,    67
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_uint8 yydefgoto[] =
 {
-       0,     1,     2,    12,    26,    13,    48,    49,    14,    27,
-      28,    15,    23,    37,   143,    29,    67,    95,    96,    38,
-      39,    40,    41,    42,    61,   104,    62,    83,    84,    64,
-      65
+       0,     1,     2,    12,    26,    30,    13,    52,    53,   139,
+     166,   138,   165,    14,    29,   102,    27,    82,    31,    32,
+      15,    23,    28,    41,   144,    33,    95,   126,   127,    42,
+      43,    44,    45,    70,    46,    64,    97,    65,    86,    87,
+      67,    68
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -696,48 +716,48 @@ static const yytype_uint8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      43,    44,    79,    17,    63,    16,     3,    85,    18,    45,
-      74,     4,     5,     6,     7,     8,    19,    51,   100,     9,
-      10,    20,    75,    52,    76,    24,    25,   109,    86,    50,
-      52,    87,    88,   113,     4,     5,     6,     7,    91,    21,
-     103,   105,    11,   123,   102,    44,   107,   105,    22,     4,
-       5,     6,     7,   114,    30,    31,    32,    87,    88,    33,
-      53,    30,    31,    32,    54,    11,    33,   140,   141,   128,
-      94,    68,   134,    69,    34,    92,    89,    90,   135,    70,
-      93,    34,    35,    69,   115,   116,    55,    36,   117,    70,
-     144,   145,   146,   147,   137,   136,   138,     4,     5,     6,
-       7,   135,   155,   156,   151,    46,    66,   150,    71,   152,
-      52,    72,    30,    31,    32,    52,    73,    33,    87,    88,
-      34,   154,    33,    47,    77,   115,   116,    33,    11,   122,
-      43,    44,    34,   157,    78,    81,   111,   112,    36,    75,
-      56,   124,   125,    57,    58,    59,    60,    82,    57,    58,
-      59,    60,    87,    88,   126,   127,   118,   119,   120,   121,
-     106,    87,    88,   129,   123,   118,   119,   120,   121,   110,
-     115,   116,   142,   130,   139,   131,   132,   133,   149,   116,
-      80,   153,    97,    98,   148,    99,   101,   108
+      47,    48,    66,    49,    16,   106,    88,    77,     4,     5,
+       6,     7,     3,    34,    35,    36,    24,    25,   131,    78,
+       4,     5,     6,     7,     8,   137,    89,    19,     9,    10,
+      55,   107,    54,    38,   123,    94,    56,    96,    98,   124,
+      71,    92,    93,   100,    98,     4,     5,     6,     7,    17,
+     108,    11,    72,    50,    90,    91,   141,   142,    73,     4,
+       5,     6,     7,    90,    91,    18,   117,   133,    48,    90,
+      91,    51,    34,    35,    36,   122,    11,    37,   145,   146,
+     147,   148,    34,    35,    36,    79,    60,    37,   167,   168,
+      11,    56,    38,    39,    61,    62,    63,   125,    40,    72,
+      20,   156,    38,   163,    21,    73,   104,   105,    40,    22,
+      90,    91,   157,   158,   112,   113,   114,   115,   118,   119,
+      57,    74,   117,    90,    91,    84,   164,   112,   113,   114,
+     115,    47,    48,    61,    62,    63,   134,    85,   136,   161,
+     162,    58,   135,    59,   135,    56,    56,   109,   110,   109,
+     110,   111,    75,   116,   109,   110,    69,    76,   140,   120,
+     121,    78,    80,    81,   103,    38,   150,    99,   143,   152,
+     151,   153,   154,   155,   110,   160,    83,   159,   149,   128,
+     129,   101,   130,   132
 };
 
 static const yytype_uint8 yycheck[] =
 {
-      23,    23,    51,    34,    32,     2,     0,    55,    34,    25,
-      14,     3,     4,     5,     6,     7,    28,    27,    67,    11,
-      12,    34,    26,    33,    27,    25,    26,    76,    56,    26,
-      33,    15,    16,    81,     3,     4,     5,     6,    66,    28,
-      68,    69,    34,    27,    67,    67,    74,    75,    26,     3,
-       4,     5,     6,    81,     8,     9,    10,    15,    16,    13,
-      34,     8,     9,    10,    26,    34,    13,   115,   116,    27,
-      67,    14,    27,    26,    28,    29,    17,    18,    33,    32,
-      34,    28,    29,    26,    23,    24,    26,    34,    27,    32,
-     118,   119,   120,   121,   110,    27,   112,     3,     4,     5,
-       6,    33,   151,   152,    27,    11,    26,   135,    25,    27,
-      33,    25,     8,     9,    10,    33,    25,    13,    15,    16,
-      28,   149,    13,    29,    34,    23,    24,    13,    34,    27,
-     153,   153,    28,    29,    34,    26,    25,    26,    34,    26,
-      26,    87,    88,    34,    35,    36,    37,    38,    34,    35,
-      36,    37,    15,    16,    89,    90,    19,    20,    21,    22,
-      34,    15,    16,    34,    27,    19,    20,    21,    22,    26,
-      23,    24,    28,    25,    27,    25,    25,    25,    14,    24,
-      52,   142,    67,    67,   122,    67,    67,    75
+      28,    28,    36,    29,     2,    82,    59,    14,     3,     4,
+       5,     6,     0,     8,     9,    10,    25,    26,    95,    26,
+       3,     4,     5,     6,     7,   102,    60,    28,    11,    12,
+      27,    84,    30,    28,    29,    69,    33,    71,    72,    34,
+      14,    17,    18,    77,    78,     3,     4,     5,     6,    34,
+      84,    34,    26,    11,    15,    16,   109,   110,    32,     3,
+       4,     5,     6,    15,    16,    34,    27,    95,    95,    15,
+      16,    29,     8,     9,    10,    27,    34,    13,   112,   113,
+     114,   115,     8,     9,    10,    27,    26,    13,   165,   166,
+      34,    33,    28,    29,    34,    35,    36,    95,    34,    26,
+      34,   135,    28,    29,    28,    32,    25,    26,    34,    26,
+      15,    16,   138,   139,    19,    20,    21,    22,    90,    91,
+      34,    25,    27,    15,    16,    26,   160,    19,    20,    21,
+      22,   159,   159,    34,    35,    36,    27,    38,    27,    27,
+      27,    26,    33,    26,    33,    33,    33,    23,    24,    23,
+      24,    27,    25,    27,    23,    24,    26,    25,    27,    92,
+      93,    26,    34,    34,    26,    28,    25,    34,    28,    25,
+      34,    25,    25,    25,    24,    14,    56,   143,   116,    95,
+      95,    78,    95,    95
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
@@ -745,48 +765,51 @@ static const yytype_uint8 yycheck[] =
 static const yytype_int8 yystos[] =
 {
        0,    40,    41,     0,     3,     4,     5,     6,     7,    11,
-      12,    34,    42,    44,    47,    50,    54,    34,    34,    28,
-      34,    28,    26,    51,    25,    26,    43,    48,    49,    54,
-       8,     9,    10,    13,    28,    29,    34,    52,    58,    59,
-      60,    61,    62,    63,    65,    48,    11,    29,    45,    46,
-      54,    27,    33,    34,    26,    26,    26,    34,    35,    36,
-      37,    63,    65,    67,    68,    69,    26,    55,    14,    26,
-      32,    25,    25,    25,    14,    26,    27,    34,    34,    61,
-      49,    26,    38,    66,    67,    66,    67,    15,    16,    17,
-      18,    67,    29,    34,    54,    56,    57,    58,    59,    60,
-      61,    62,    63,    67,    64,    67,    34,    67,    64,    61,
-      26,    25,    26,    66,    67,    23,    24,    27,    19,    20,
-      21,    22,    27,    27,    68,    68,    69,    69,    27,    34,
-      25,    25,    25,    25,    27,    33,    27,    48,    48,    27,
-      66,    66,    28,    53,    67,    67,    67,    67,    53,    14,
-      67,    27,    27,    51,    67,    61,    61,    29
+      12,    34,    42,    45,    52,    59,    64,    34,    34,    28,
+      34,    28,    26,    60,    25,    26,    43,    55,    61,    53,
+      44,    57,    58,    64,     8,     9,    10,    13,    28,    29,
+      34,    62,    68,    69,    70,    71,    73,    74,    76,    57,
+      11,    29,    46,    47,    64,    27,    33,    34,    26,    26,
+      26,    34,    35,    36,    74,    76,    78,    79,    80,    26,
+      72,    14,    26,    32,    25,    25,    25,    14,    26,    27,
+      34,    34,    56,    58,    26,    38,    77,    78,    77,    78,
+      15,    16,    17,    18,    78,    65,    78,    75,    78,    34,
+      78,    75,    54,    26,    25,    26,    71,    77,    78,    23,
+      24,    27,    19,    20,    21,    22,    27,    27,    79,    79,
+      80,    80,    27,    29,    34,    64,    66,    67,    68,    69,
+      70,    71,    73,    74,    27,    33,    27,    71,    50,    48,
+      27,    77,    77,    28,    63,    78,    78,    78,    78,    63,
+      25,    34,    25,    25,    25,    25,    78,    57,    57,    61,
+      14,    27,    27,    29,    78,    51,    49,    71,    71
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    39,    40,    41,    41,    41,    41,    42,    43,    43,
-      43,    44,    45,    46,    46,    47,    47,    48,    48,    48,
-      49,    50,    51,    51,    52,    52,    52,    52,    52,    52,
-      53,    54,    54,    54,    54,    54,    55,    55,    56,    56,
-      56,    56,    56,    56,    56,    57,    57,    58,    58,    59,
-      60,    61,    62,    62,    63,    63,    63,    64,    64,    64,
-      65,    66,    66,    66,    66,    66,    66,    66,    66,    67,
-      67,    67,    68,    68,    68,    69,    69,    69,    69,    69,
-      69,    69
+       0,    39,    40,    41,    41,    41,    41,    43,    42,    44,
+      44,    44,    45,    46,    48,    49,    47,    50,    51,    47,
+      53,    54,    52,    55,    56,    52,    57,    57,    57,    58,
+      60,    59,    61,    61,    62,    62,    62,    62,    62,    62,
+      62,    63,    64,    64,    64,    64,    64,    65,    65,    66,
+      66,    66,    66,    66,    66,    66,    67,    67,    68,    68,
+      69,    70,    72,    71,    73,    73,    74,    74,    75,    75,
+      75,    76,    77,    77,    77,    77,    77,    77,    77,    77,
+      78,    78,    78,    79,    79,    79,    80,    80,    80,    80,
+      80,    80
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     2,     2,     2,     2,     0,     5,     2,     2,
-       0,     3,     3,     6,     6,     6,     6,     1,     3,     0,
-       2,     4,     2,     0,     2,     2,     1,     1,     1,     2,
-       3,     1,     1,     1,     1,     1,     2,     0,     2,     2,
-       1,     1,     1,     2,     2,     2,     4,     3,     3,     5,
-       5,     3,     2,     1,     4,     4,     4,     1,     3,     0,
-       3,     3,     3,     3,     3,     3,     3,     3,     1,     3,
-       3,     1,     3,     3,     1,     1,     1,     1,     1,     1,
+       0,     2,     2,     2,     2,     2,     0,     0,     6,     2,
+       2,     0,     3,     3,     0,     0,     8,     0,     0,     8,
+       0,     0,     8,     0,     0,     8,     1,     3,     0,     2,
+       0,     5,     2,     0,     2,     2,     1,     1,     1,     2,
+       5,     3,     1,     1,     1,     1,     1,     2,     0,     2,
+       2,     1,     1,     1,     2,     2,     2,     4,     3,     3,
+       5,     5,     0,     4,     2,     1,     4,     4,     1,     3,
+       0,     3,     3,     3,     3,     3,     3,     3,     3,     1,
+       3,     3,     1,     3,     3,     1,     1,     1,     1,     1,
        1,     3
 };
 
@@ -1251,286 +1274,543 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* program: global_definitions main_block  */
-#line 62 "parser.y"
-       { log_syntax("Program complet recunoscut."); }
-#line 1257 "parser.tab.cpp"
+#line 58 "parser.y"
+       { 
+           log_syntax("Program complet recunoscut."); 
+           finalize_program();
+       }
+#line 1283 "parser.tab.cpp"
     break;
 
-  case 7: /* class_definition: CLASS_KEY IDENTIFIER LBRACE class_body RBRACE  */
-#line 72 "parser.y"
-                { log_syntax("Definitie Clasa: " + *((yyvsp[-3].strVal)) + " recunoscuta."); }
-#line 1263 "parser.tab.cpp"
+  case 7: /* $@1: %empty  */
+#line 70 "parser.y"
+                                              {
+                    SymbolTable* newScope = new SymbolTable(currentTable, "class_" + *(yyvsp[-1].strVal));
+                    globalTable->insert(*(yyvsp[-1].strVal), *(yyvsp[-1].strVal), "class", {}, newScope);
+                    classScopes[*(yyvsp[-1].strVal)] = newScope;
+                    currentTable = newScope;
+                }
+#line 1294 "parser.tab.cpp"
     break;
 
-  case 11: /* variable_definition: data_type IDENTIFIER SEMICOLON  */
-#line 81 "parser.y"
-                   { log_syntax("Declaratie Variabila recunoscuta: " + *((yyvsp[-2].strVal)) + " " + *((yyvsp[-1].strVal))); 
-                   if (!currentTable->insert(*(yyvsp[-1].strVal), *(yyvsp[-2].strVal), "variable")) {
-                   yyerror("Eroare: Variabila deja declarata!");}
-                   }
-#line 1272 "parser.tab.cpp"
+  case 8: /* class_definition: CLASS_KEY IDENTIFIER LBRACE $@1 class_body RBRACE  */
+#line 76 "parser.y"
+                { 
+                    currentTable = currentTable->getParent();
+                    log_syntax("Definitie Clasa: " + *((yyvsp[-4].strVal)) + " recunoscuta."); 
+                }
+#line 1303 "parser.tab.cpp"
     break;
 
-  case 12: /* field_declaration: data_type IDENTIFIER SEMICOLON  */
+  case 12: /* variable_definition: data_type IDENTIFIER SEMICOLON  */
 #line 88 "parser.y"
-                 { log_syntax("Declaratie Camp/Field recunoscuta: " + *((yyvsp[-2].strVal)) + " " + *((yyvsp[-1].strVal))); }
-#line 1278 "parser.tab.cpp"
-    break;
-
-  case 13: /* method_definition: data_type IDENTIFIER LPAREN parameter_list RPAREN block  */
-#line 92 "parser.y"
-                 { log_syntax("Definitie Metoda/Functie recunoscuta: " + *((yyvsp[-5].strVal)) + " " + *((yyvsp[-4].strVal))); }
-#line 1284 "parser.tab.cpp"
-    break;
-
-  case 14: /* method_definition: VOID_TYPE IDENTIFIER LPAREN parameter_list RPAREN block  */
-#line 94 "parser.y"
-                 { log_syntax("Definitie Metoda/Functie VOID recunoscuta: " + *((yyvsp[-4].strVal))); }
-#line 1290 "parser.tab.cpp"
-    break;
-
-  case 15: /* function_definition: data_type IDENTIFIER LPAREN parameter_list RPAREN block  */
-#line 98 "parser.y"
-                   { log_syntax("Definitie Functie recunoscuta: " + *((yyvsp[-5].strVal)) + " " + *((yyvsp[-4].strVal))); 
-                     SymbolTable* newScope = new SymbolTable(currentTable, "func_" + *(yyvsp[-4].strVal));
-                     currentTable = newScope;
+                   { 
+                       log_syntax("Declaratie Variabila recunoscuta: " + *((yyvsp[-2].strVal)) + " " + *((yyvsp[-1].strVal))); 
+                       currentTable->insert(*(yyvsp[-1].strVal), *(yyvsp[-2].strVal), "variable");
                    }
-#line 1299 "parser.tab.cpp"
+#line 1312 "parser.tab.cpp"
     break;
 
-  case 16: /* function_definition: VOID_TYPE IDENTIFIER LPAREN parameter_list RPAREN block  */
+  case 13: /* field_declaration: data_type IDENTIFIER SEMICOLON  */
+#line 95 "parser.y"
+                 { 
+                     log_syntax("Declaratie Camp/Field recunoscuta: " + *((yyvsp[-2].strVal)) + " " + *((yyvsp[-1].strVal))); 
+                     currentTable->insert(*(yyvsp[-1].strVal), *(yyvsp[-2].strVal), "field");
+                 }
+#line 1321 "parser.tab.cpp"
+    break;
+
+  case 14: /* $@2: %empty  */
+#line 101 "parser.y"
+                                               {
+                    currentTable = new SymbolTable(currentTable, "method_" + *(yyvsp[-1].strVal));
+                 }
+#line 1329 "parser.tab.cpp"
+    break;
+
+  case 15: /* $@3: %empty  */
 #line 103 "parser.y"
-                   { log_syntax("Definitie Functie VOID recunoscuta: " + *((yyvsp[-4].strVal))); 
-                     SymbolTable* newScope = new SymbolTable(currentTable, "func_" + *(yyvsp[-4].strVal));
-                     currentTable = newScope;
-                   }
-#line 1308 "parser.tab.cpp"
+                                         {
+                    currentTable->getParent()->insert(*(yyvsp[-4].strVal), *(yyvsp[-5].strVal), "method", *(yyvsp[-1].typeList));
+                 }
+#line 1337 "parser.tab.cpp"
     break;
 
-  case 21: /* main_block: MAIN_KEY LBRACE no_decl_statement_list RBRACE  */
-#line 118 "parser.y"
-          { log_syntax("Blocul Main recunoscut."); }
-#line 1314 "parser.tab.cpp"
+  case 16: /* method_definition: data_type IDENTIFIER LPAREN $@2 parameter_list RPAREN $@3 block  */
+#line 106 "parser.y"
+                 { 
+                    currentTable = currentTable->getParent();
+                    log_syntax("Definitie Metoda: " + *((yyvsp[-7].strVal)) + " " + *((yyvsp[-6].strVal))); 
+                 }
+#line 1346 "parser.tab.cpp"
     break;
 
-  case 30: /* no_decl_block: LBRACE no_decl_statement_list RBRACE  */
-#line 134 "parser.y"
-         { log_syntax("Block recunoscut."); }
-#line 1320 "parser.tab.cpp"
+  case 17: /* $@4: %empty  */
+#line 110 "parser.y"
+                                               {
+                    currentTable = new SymbolTable(currentTable, "method_" + *(yyvsp[-1].strVal));
+                 }
+#line 1354 "parser.tab.cpp"
     break;
 
-  case 31: /* data_type: INT_TYPE  */
-#line 137 "parser.y"
-                    { (yyval.strVal) = new std::string("int"); }
-#line 1326 "parser.tab.cpp"
-    break;
-
-  case 32: /* data_type: FLOAT_TYPE  */
-#line 138 "parser.y"
-                      { (yyval.strVal) = new std::string("float"); }
-#line 1332 "parser.tab.cpp"
-    break;
-
-  case 33: /* data_type: STRING_TYPE  */
-#line 139 "parser.y"
-                       { (yyval.strVal) = new std::string("string"); }
-#line 1338 "parser.tab.cpp"
-    break;
-
-  case 34: /* data_type: BOOL_TYPE  */
-#line 140 "parser.y"
-                     { (yyval.strVal) = new std::string("bool"); }
-#line 1344 "parser.tab.cpp"
-    break;
-
-  case 46: /* local_variable_declaration: data_type IDENTIFIER ASSIGN expression  */
-#line 159 "parser.y"
-                          { log_syntax("Declaratie Variabila Locala recunoscuta."); }
-#line 1350 "parser.tab.cpp"
-    break;
-
-  case 47: /* assignment_statement: IDENTIFIER ASSIGN expression  */
-#line 163 "parser.y"
-                    { log_syntax("Assignment simplu recunoscut: " + *((yyvsp[-2].strVal))); }
-#line 1356 "parser.tab.cpp"
-    break;
-
-  case 48: /* assignment_statement: object_access ASSIGN expression  */
-#line 165 "parser.y"
-                    { log_syntax("Assignment cu Object Access recunoscut."); }
+  case 18: /* $@5: %empty  */
+#line 112 "parser.y"
+                                         {
+                    currentTable->getParent()->insert(*(yyvsp[-4].strVal), "void", "method", *(yyvsp[-1].typeList));
+                 }
 #line 1362 "parser.tab.cpp"
     break;
 
-  case 49: /* if_statement: IF_KEY LPAREN boolean_expression RPAREN no_decl_block  */
-#line 169 "parser.y"
-            { log_syntax("If statement recunoscut."); }
-#line 1368 "parser.tab.cpp"
+  case 19: /* method_definition: VOID_TYPE IDENTIFIER LPAREN $@4 parameter_list RPAREN $@5 block  */
+#line 115 "parser.y"
+                 { 
+                    currentTable = currentTable->getParent();
+                    log_syntax("Definitie Metoda VOID recunoscuta: " + *((yyvsp[-6].strVal))); 
+                 }
+#line 1371 "parser.tab.cpp"
     break;
 
-  case 50: /* while_statement: WHILE_KEY LPAREN boolean_expression RPAREN no_decl_block  */
-#line 173 "parser.y"
-               { log_syntax("While statement recunoscut."); }
-#line 1374 "parser.tab.cpp"
+  case 20: /* $@6: %empty  */
+#line 121 "parser.y"
+                                                 {
+                        currentTable = new SymbolTable(currentTable, "func_" + *(yyvsp[-1].strVal));
+                    }
+#line 1379 "parser.tab.cpp"
     break;
 
-  case 51: /* block: LBRACE statement_list RBRACE  */
-#line 177 "parser.y"
-     { log_syntax("Block recunoscut."); }
-#line 1380 "parser.tab.cpp"
+  case 21: /* $@7: %empty  */
+#line 123 "parser.y"
+                                            {
+                        globalTable->insert(*(yyvsp[-4].strVal), *(yyvsp[-5].strVal), "function", *(yyvsp[-1].typeList));
+                    }
+#line 1387 "parser.tab.cpp"
     break;
 
-  case 52: /* return_statement: RETURN_KEY expression  */
-#line 181 "parser.y"
-                { log_syntax("Return cu expresie recunoscut."); }
-#line 1386 "parser.tab.cpp"
+  case 22: /* function_definition: data_type IDENTIFIER LPAREN $@6 parameter_list RPAREN $@7 block  */
+#line 126 "parser.y"
+                   { 
+                       currentTable = currentTable->getParent();
+                       log_syntax("Definitie Functie: " + *((yyvsp[-7].strVal)) + " " + *((yyvsp[-6].strVal))); 
+                   }
+#line 1396 "parser.tab.cpp"
     break;
 
-  case 53: /* return_statement: RETURN_KEY  */
-#line 183 "parser.y"
-                { log_syntax("Return VOID recunoscut."); }
-#line 1392 "parser.tab.cpp"
-    break;
-
-  case 54: /* function_call_statement: IDENTIFIER LPAREN argument_list RPAREN  */
-#line 187 "parser.y"
-                       { log_syntax("Apel Functie simpla recunoscut: " + *((yyvsp[-3].strVal))); }
-#line 1398 "parser.tab.cpp"
-    break;
-
-  case 55: /* function_call_statement: PRINT_CALL LPAREN expression RPAREN  */
-#line 189 "parser.y"
-                       { log_syntax("Apel Print(expr) recunoscut."); }
+  case 23: /* $@8: %empty  */
+#line 130 "parser.y"
+                                                 {
+                        currentTable = new SymbolTable(currentTable, "func_" + *(yyvsp[-1].strVal));
+                    }
 #line 1404 "parser.tab.cpp"
     break;
 
-  case 56: /* function_call_statement: object_access LPAREN argument_list RPAREN  */
-#line 191 "parser.y"
-                       { log_syntax("Apel Metoda recunoscut."); }
-#line 1410 "parser.tab.cpp"
+  case 24: /* $@9: %empty  */
+#line 132 "parser.y"
+                                            {
+                        globalTable->insert(*(yyvsp[-4].strVal), "void", "function", *(yyvsp[-1].typeList));
+                    }
+#line 1412 "parser.tab.cpp"
     break;
 
-  case 60: /* object_access: IDENTIFIER DOT IDENTIFIER  */
-#line 200 "parser.y"
-             { log_syntax("Object Access (obj.field/method) recunoscut: " + *((yyvsp[-2].strVal)) + "." + *((yyvsp[0].strVal))); }
-#line 1416 "parser.tab.cpp"
+  case 25: /* function_definition: VOID_TYPE IDENTIFIER LPAREN $@8 parameter_list RPAREN $@9 block  */
+#line 135 "parser.y"
+                   { 
+                       currentTable = currentTable->getParent();
+                       log_syntax("Definitie Functie VOID recunoscuta: " + *((yyvsp[-6].strVal))); 
+                   }
+#line 1421 "parser.tab.cpp"
     break;
 
-  case 61: /* boolean_expression: expression OP_LT expression  */
-#line 203 "parser.y"
-                                                { log_syntax("Expresie Bool: <"); }
-#line 1422 "parser.tab.cpp"
+  case 26: /* parameter_list: parameter  */
+#line 142 "parser.y"
+              { 
+                  (yyval.typeList) = new std::vector<std::string>(); 
+                  (yyval.typeList)->push_back(*(yyvsp[0].strVal)); 
+              }
+#line 1430 "parser.tab.cpp"
     break;
 
-  case 62: /* boolean_expression: expression OP_GT expression  */
-#line 204 "parser.y"
-                                                { log_syntax("Expresie Bool: >"); }
-#line 1428 "parser.tab.cpp"
+  case 27: /* parameter_list: parameter_list COMMA parameter  */
+#line 147 "parser.y"
+              { 
+                  (yyvsp[-2].typeList)->push_back(*(yyvsp[0].strVal)); 
+                  (yyval.typeList) = (yyvsp[-2].typeList); 
+              }
+#line 1439 "parser.tab.cpp"
     break;
 
-  case 63: /* boolean_expression: expression OP_EQ expression  */
-#line 205 "parser.y"
-                                                { log_syntax("Expresie Bool: =="); }
-#line 1434 "parser.tab.cpp"
+  case 28: /* parameter_list: %empty  */
+#line 152 "parser.y"
+              { 
+                  (yyval.typeList) = new std::vector<std::string>(); 
+              }
+#line 1447 "parser.tab.cpp"
     break;
 
-  case 64: /* boolean_expression: expression OP_NEQ expression  */
-#line 206 "parser.y"
-                                                 { log_syntax("Expresie Bool: !="); }
-#line 1440 "parser.tab.cpp"
+  case 29: /* parameter: data_type IDENTIFIER  */
+#line 158 "parser.y"
+         {
+             currentTable->insert(*(yyvsp[0].strVal), *(yyvsp[-1].strVal), "parameter");
+             (yyval.strVal) = (yyvsp[-1].strVal);
+         }
+#line 1456 "parser.tab.cpp"
     break;
 
-  case 65: /* boolean_expression: boolean_expression OP_AND boolean_expression  */
-#line 207 "parser.y"
-                                                                 { log_syntax("Expresie Bool: &&"); }
-#line 1446 "parser.tab.cpp"
-    break;
-
-  case 66: /* boolean_expression: boolean_expression OP_OR boolean_expression  */
-#line 208 "parser.y"
-                                                                { log_syntax("Expresie Bool: ||"); }
-#line 1452 "parser.tab.cpp"
-    break;
-
-  case 67: /* boolean_expression: LPAREN boolean_expression RPAREN  */
-#line 209 "parser.y"
-                                                     { (yyval.exprVal) = (yyvsp[-1].exprVal); log_syntax("Expresie Bool: Paranteze"); }
-#line 1458 "parser.tab.cpp"
-    break;
-
-  case 68: /* boolean_expression: BOOL_LITERAL  */
-#line 210 "parser.y"
-                                 { log_syntax("Expresie Bool: Literal"); ; (yyval.exprVal) = NULL;}
+  case 30: /* $@10: %empty  */
+#line 164 "parser.y"
+                            {
+                currentTable = new SymbolTable(currentTable, "main");
+            }
 #line 1464 "parser.tab.cpp"
     break;
 
-  case 69: /* expression: expression OP_ADD term  */
+  case 31: /* main_block: MAIN_KEY LBRACE $@10 no_decl_statement_list RBRACE  */
+#line 167 "parser.y"
+          { 
+              currentTable = currentTable->getParent(); 
+              log_syntax("Blocul Main recunoscut.");
+          }
+#line 1473 "parser.tab.cpp"
+    break;
+
+  case 34: /* no_decl_statement: assignment_statement SEMICOLON  */
+#line 178 "parser.y"
+         { 
+             if((yyvsp[-1].astPtr)) (yyvsp[-1].astPtr)->evaluate(currentTable); // Evaluare AST pentru orice atribuire (IV.2)
+         }
+#line 1481 "parser.tab.cpp"
+    break;
+
+  case 35: /* no_decl_statement: function_call_statement SEMICOLON  */
+#line 182 "parser.y"
+         { 
+             if((yyvsp[-1].astPtr)) (yyvsp[-1].astPtr)->evaluate(currentTable); // Evaluare AST pentru apeluri
+         }
+#line 1489 "parser.tab.cpp"
+    break;
+
+  case 40: /* no_decl_statement: PRINT_CALL LPAREN expression RPAREN SEMICOLON  */
+#line 190 "parser.y"
+         {
+             ASTNode* pNode = new ASTNode("Print", "void", (yyvsp[-2].astPtr));
+             pNode->evaluate(currentTable);
+             log_syntax("Apel Print(expr) recunoscut.");
+         }
+#line 1499 "parser.tab.cpp"
+    break;
+
+  case 41: /* no_decl_block: LBRACE no_decl_statement_list RBRACE  */
+#line 198 "parser.y"
+         { log_syntax("Block recunoscut."); }
+#line 1505 "parser.tab.cpp"
+    break;
+
+  case 42: /* data_type: INT_TYPE  */
+#line 201 "parser.y"
+                    { (yyval.strVal) = new std::string("int"); }
+#line 1511 "parser.tab.cpp"
+    break;
+
+  case 43: /* data_type: FLOAT_TYPE  */
+#line 202 "parser.y"
+                      { (yyval.strVal) = new std::string("float"); }
+#line 1517 "parser.tab.cpp"
+    break;
+
+  case 44: /* data_type: STRING_TYPE  */
+#line 203 "parser.y"
+                       { (yyval.strVal) = new std::string("string"); }
+#line 1523 "parser.tab.cpp"
+    break;
+
+  case 45: /* data_type: BOOL_TYPE  */
+#line 204 "parser.y"
+                     { (yyval.strVal) = new std::string("bool"); }
+#line 1529 "parser.tab.cpp"
+    break;
+
+  case 46: /* data_type: IDENTIFIER  */
+#line 205 "parser.y"
+                      { (yyval.strVal) = (yyvsp[0].strVal); }
+#line 1535 "parser.tab.cpp"
+    break;
+
+  case 49: /* statement: assignment_statement SEMICOLON  */
+#line 212 "parser.y"
+                                          { if((yyvsp[-1].astPtr)) (yyvsp[-1].astPtr)->evaluate(currentTable); }
+#line 1541 "parser.tab.cpp"
+    break;
+
+  case 50: /* statement: function_call_statement SEMICOLON  */
 #line 213 "parser.y"
-                                   { log_syntax("Expresie: +"); }
-#line 1470 "parser.tab.cpp"
+                                             { if((yyvsp[-1].astPtr)) (yyvsp[-1].astPtr)->evaluate(currentTable); }
+#line 1547 "parser.tab.cpp"
     break;
 
-  case 70: /* expression: expression OP_SUB term  */
-#line 214 "parser.y"
-                                   { log_syntax("Expresie: -"); }
-#line 1476 "parser.tab.cpp"
+  case 56: /* local_variable_declaration: data_type IDENTIFIER  */
+#line 222 "parser.y"
+                          { currentTable->insert(*(yyvsp[0].strVal), *(yyvsp[-1].strVal), "variable"); }
+#line 1553 "parser.tab.cpp"
     break;
 
-  case 72: /* term: term OP_MUL factor  */
-#line 218 "parser.y"
-                         { log_syntax("Expresie: *"); }
-#line 1482 "parser.tab.cpp"
-    break;
-
-  case 73: /* term: term OP_DIV factor  */
-#line 219 "parser.y"
-                         { log_syntax("Expresie: /"); }
-#line 1488 "parser.tab.cpp"
-    break;
-
-  case 75: /* factor: IDENTIFIER  */
-#line 223 "parser.y"
-                   { log_syntax("Expresie: Identificator"); (yyval.exprVal) = NULL; }
-#line 1494 "parser.tab.cpp"
-    break;
-
-  case 76: /* factor: object_access  */
+  case 57: /* local_variable_declaration: data_type IDENTIFIER ASSIGN expression  */
 #line 224 "parser.y"
-                      { log_syntax("Expresie: Acces Obiect"); }
-#line 1500 "parser.tab.cpp"
+                          { 
+                              log_syntax("Declaratie Variabila Locala recunoscuta.");
+                              currentTable->insert(*(yyvsp[-2].strVal), *(yyvsp[-3].strVal), "variable"); 
+                              checkTypes(*(yyvsp[-3].strVal), (yyvsp[0].astPtr)->nodeType, "init"); 
+                              (yyvsp[0].astPtr)->evaluate(currentTable); // Evaluare la inițializare
+                          }
+#line 1564 "parser.tab.cpp"
     break;
 
-  case 77: /* factor: INTEGER_LITERAL  */
-#line 225 "parser.y"
-                        { log_syntax("Expresie: Literal Int"); }
-#line 1506 "parser.tab.cpp"
+  case 58: /* assignment_statement: IDENTIFIER ASSIGN expression  */
+#line 233 "parser.y"
+                    { 
+                        log_syntax("Assignment simplu recunoscut: " + *((yyvsp[-2].strVal)));
+                        Symbol* s = currentTable->lookup(*(yyvsp[-2].strVal)); 
+                        checkTypes(s->type, (yyvsp[0].astPtr)->nodeType, "atribuire"); 
+                        (yyval.astPtr) = new ASTNode(":=", s->type, new ASTNode(*(yyvsp[-2].strVal), s->type), (yyvsp[0].astPtr));
+                    }
+#line 1575 "parser.tab.cpp"
     break;
 
-  case 78: /* factor: FLOAT_LITERAL  */
-#line 226 "parser.y"
-                      { log_syntax("Expresie: Literal Float"); }
-#line 1512 "parser.tab.cpp"
+  case 59: /* assignment_statement: object_access ASSIGN expression  */
+#line 240 "parser.y"
+                    { 
+                        log_syntax("Assignment cu Object Access recunoscut.");
+                        checkTypes((yyvsp[-2].astPtr)->nodeType, (yyvsp[0].astPtr)->nodeType, "atribuire obiect"); 
+                        (yyval.astPtr) = new ASTNode(":=", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr));
+                    }
+#line 1585 "parser.tab.cpp"
     break;
 
-  case 79: /* factor: STRING_LITERAL  */
-#line 227 "parser.y"
-                       { log_syntax("Expresie: Literal String"); }
-#line 1518 "parser.tab.cpp"
+  case 60: /* if_statement: IF_KEY LPAREN boolean_expression RPAREN no_decl_block  */
+#line 248 "parser.y"
+            { log_syntax("If statement recunoscut."); }
+#line 1591 "parser.tab.cpp"
     break;
 
-  case 80: /* factor: function_call_statement  */
-#line 228 "parser.y"
-                                { log_syntax("Expresie: Apel Functie"); }
-#line 1524 "parser.tab.cpp"
+  case 61: /* while_statement: WHILE_KEY LPAREN boolean_expression RPAREN no_decl_block  */
+#line 252 "parser.y"
+               { log_syntax("While statement recunoscut."); }
+#line 1597 "parser.tab.cpp"
     break;
 
-  case 81: /* factor: LPAREN expression RPAREN  */
-#line 229 "parser.y"
-                                 { (yyval.exprVal) = (yyvsp[-1].exprVal); log_syntax("Factor: Paranteze"); }
-#line 1530 "parser.tab.cpp"
+  case 62: /* $@11: %empty  */
+#line 255 "parser.y"
+              {
+            currentTable = new SymbolTable(currentTable, "block_" + std::to_string(yylineno));
+        }
+#line 1605 "parser.tab.cpp"
+    break;
+
+  case 63: /* block: LBRACE $@11 statement_list RBRACE  */
+#line 258 "parser.y"
+     { 
+         currentTable = currentTable->getParent(); 
+         log_syntax("Block recunoscut."); 
+     }
+#line 1614 "parser.tab.cpp"
+    break;
+
+  case 64: /* return_statement: RETURN_KEY expression  */
+#line 265 "parser.y"
+                { log_syntax("Return cu expresie recunoscut."); }
+#line 1620 "parser.tab.cpp"
+    break;
+
+  case 65: /* return_statement: RETURN_KEY  */
+#line 267 "parser.y"
+                { log_syntax("Return VOID recunoscut."); }
+#line 1626 "parser.tab.cpp"
+    break;
+
+  case 66: /* function_call_statement: IDENTIFIER LPAREN argument_list RPAREN  */
+#line 271 "parser.y"
+                       { 
+                           log_syntax("Apel Functie simpla recunoscut: " + *((yyvsp[-3].strVal)));
+                           Symbol* s = currentTable->lookup(*(yyvsp[-3].strVal)); 
+                           (yyval.astPtr) = new ASTNode("OTHER", (s ? s->type : "void"));
+                       }
+#line 1636 "parser.tab.cpp"
+    break;
+
+  case 67: /* function_call_statement: object_access LPAREN argument_list RPAREN  */
+#line 277 "parser.y"
+                       { 
+                           log_syntax("Apel Metoda recunoscut.");
+                           (yyval.astPtr) = new ASTNode("OTHER", "void");
+                       }
+#line 1645 "parser.tab.cpp"
+    break;
+
+  case 68: /* argument_list: expression  */
+#line 284 "parser.y"
+             { 
+                 (yyval.typeList) = new std::vector<std::string>(); 
+                 (yyval.typeList)->push_back((yyvsp[0].astPtr)->nodeType); 
+             }
+#line 1654 "parser.tab.cpp"
+    break;
+
+  case 69: /* argument_list: argument_list COMMA expression  */
+#line 289 "parser.y"
+             { 
+                 (yyvsp[-2].typeList)->push_back((yyvsp[0].astPtr)->nodeType); 
+                 (yyval.typeList) = (yyvsp[-2].typeList); 
+             }
+#line 1663 "parser.tab.cpp"
+    break;
+
+  case 70: /* argument_list: %empty  */
+#line 294 "parser.y"
+             { 
+                 (yyval.typeList) = new std::vector<std::string>(); 
+             }
+#line 1671 "parser.tab.cpp"
+    break;
+
+  case 71: /* object_access: IDENTIFIER DOT IDENTIFIER  */
+#line 300 "parser.y"
+             { 
+                 log_syntax("Object Access recunoscut: " + *((yyvsp[-2].strVal)) + "." + *((yyvsp[0].strVal)));
+                 (yyval.astPtr) = new ASTNode("OTHER", "int");
+             }
+#line 1680 "parser.tab.cpp"
+    break;
+
+  case 72: /* boolean_expression: expression OP_LT expression  */
+#line 306 "parser.y"
+                                                { (yyval.astPtr) = new ASTNode("<", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1686 "parser.tab.cpp"
+    break;
+
+  case 73: /* boolean_expression: expression OP_GT expression  */
+#line 307 "parser.y"
+                                                { (yyval.astPtr) = new ASTNode(">", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1692 "parser.tab.cpp"
+    break;
+
+  case 74: /* boolean_expression: expression OP_EQ expression  */
+#line 308 "parser.y"
+                                                { (yyval.astPtr) = new ASTNode("==", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1698 "parser.tab.cpp"
+    break;
+
+  case 75: /* boolean_expression: expression OP_NEQ expression  */
+#line 309 "parser.y"
+                                                 { (yyval.astPtr) = new ASTNode("!=", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1704 "parser.tab.cpp"
+    break;
+
+  case 76: /* boolean_expression: boolean_expression OP_AND boolean_expression  */
+#line 310 "parser.y"
+                                                                 { (yyval.astPtr) = new ASTNode("&&", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1710 "parser.tab.cpp"
+    break;
+
+  case 77: /* boolean_expression: boolean_expression OP_OR boolean_expression  */
+#line 311 "parser.y"
+                                                                { (yyval.astPtr) = new ASTNode("||", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1716 "parser.tab.cpp"
+    break;
+
+  case 78: /* boolean_expression: LPAREN boolean_expression RPAREN  */
+#line 312 "parser.y"
+                                                     { (yyval.astPtr) = (yyvsp[-1].astPtr); }
+#line 1722 "parser.tab.cpp"
+    break;
+
+  case 79: /* boolean_expression: BOOL_LITERAL  */
+#line 313 "parser.y"
+                                 { (yyval.astPtr) = new ASTNode("bool_lit", "bool"); }
+#line 1728 "parser.tab.cpp"
+    break;
+
+  case 80: /* expression: expression OP_ADD term  */
+#line 316 "parser.y"
+                                   { (yyval.astPtr) = new ASTNode("+", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1734 "parser.tab.cpp"
+    break;
+
+  case 81: /* expression: expression OP_SUB term  */
+#line 317 "parser.y"
+                                   { (yyval.astPtr) = new ASTNode("-", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1740 "parser.tab.cpp"
+    break;
+
+  case 82: /* expression: term  */
+#line 318 "parser.y"
+                 { (yyval.astPtr) = (yyvsp[0].astPtr); }
+#line 1746 "parser.tab.cpp"
+    break;
+
+  case 83: /* term: term OP_MUL factor  */
+#line 321 "parser.y"
+                         { (yyval.astPtr) = new ASTNode("*", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1752 "parser.tab.cpp"
+    break;
+
+  case 84: /* term: term OP_DIV factor  */
+#line 322 "parser.y"
+                         { (yyval.astPtr) = new ASTNode("/", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
+#line 1758 "parser.tab.cpp"
+    break;
+
+  case 85: /* term: factor  */
+#line 323 "parser.y"
+             { (yyval.astPtr) = (yyvsp[0].astPtr); }
+#line 1764 "parser.tab.cpp"
+    break;
+
+  case 86: /* factor: IDENTIFIER  */
+#line 327 "parser.y"
+       { 
+            log_syntax("Expresie: Identificator");
+            Symbol* s = currentTable->lookup(*(yyvsp[0].strVal)); 
+            (yyval.astPtr) = new ASTNode(*(yyvsp[0].strVal), (s ? s->type : "int"));
+       }
+#line 1774 "parser.tab.cpp"
+    break;
+
+  case 87: /* factor: object_access  */
+#line 332 "parser.y"
+                      { log_syntax("Expresie: Acces Obiect"); (yyval.astPtr) = (yyvsp[0].astPtr); }
+#line 1780 "parser.tab.cpp"
+    break;
+
+  case 88: /* factor: INTEGER_LITERAL  */
+#line 334 "parser.y"
+      { 
+          log_syntax("Expresie: Literal Int"); 
+          (yyval.astPtr) = new ASTNode(std::to_string((yyvsp[0].intVal)), "int");
+      }
+#line 1789 "parser.tab.cpp"
+    break;
+
+  case 89: /* factor: FLOAT_LITERAL  */
+#line 339 "parser.y"
+      { 
+          log_syntax("Expresie: Literal Float"); 
+          (yyval.astPtr) = new ASTNode(std::to_string((yyvsp[0].floatVal)), "float"); 
+      }
+#line 1798 "parser.tab.cpp"
+    break;
+
+  case 90: /* factor: function_call_statement  */
+#line 343 "parser.y"
+                                { log_syntax("Expresie: Apel Functie"); (yyval.astPtr) = (yyvsp[0].astPtr); }
+#line 1804 "parser.tab.cpp"
+    break;
+
+  case 91: /* factor: LPAREN expression RPAREN  */
+#line 344 "parser.y"
+                                 { log_syntax("Factor: Paranteze"); (yyval.astPtr) = (yyvsp[-1].astPtr); }
+#line 1810 "parser.tab.cpp"
     break;
 
 
-#line 1534 "parser.tab.cpp"
+#line 1814 "parser.tab.cpp"
 
       default: break;
     }
@@ -1723,9 +2003,9 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 232 "parser.y"
+#line 347 "parser.y"
 
 
 void yyerror(const char *s) {
-    std::cerr << "!!! EROARE DE SINTAXA: " << s << " la linia " << yylineno << std::endl;
+    std::cerr << "!!! EROARE la linia " << yylineno << ": " << s << std::endl;
 }
