@@ -86,6 +86,11 @@ class_body: class_body field_declaration
 
 variable_definition: data_type IDENTIFIER SEMICOLON
                    { 
+                        Symbol* s = currentTable->lookup(*$2); 
+                            if(s) {
+                                std::string msg = "Eroare: Identificatorul '" + *$2 + "' deja a fost declarat.";
+                                yyerror(msg.c_str()); exit(1); 
+                            }
                        log_syntax("Declaratie Variabila recunoscuta: " + *($1) + " " + *($2)); 
                        currentTable->insert(*$2, *$1, "variable");
                    }
@@ -93,6 +98,11 @@ variable_definition: data_type IDENTIFIER SEMICOLON
 
 field_declaration: data_type IDENTIFIER SEMICOLON
                  { 
+                    Symbol* s = currentTable->lookup(*$2); 
+                            if(s) {
+                                std::string msg = "Eroare: Identificatorul '" + *$2 + "' deja a fost declarat.";
+                                yyerror(msg.c_str()); exit(1); 
+                            }
                      log_syntax("Declaratie Camp/Field recunoscuta: " + *($1) + " " + *($2)); 
                      currentTable->insert(*$2, *$1, "field");
                  }
@@ -219,13 +229,23 @@ statement: assignment_statement SEMICOLON { if($1) $1->evaluate(currentTable); }
          ;
 
 local_variable_declaration: data_type IDENTIFIER
-                          { currentTable->insert(*$2, *$1, "variable"); }
+                          { Symbol* s = currentTable->lookup(*$2); 
+                            if(s) {
+                                std::string msg = "Eroare: Identificatorul '" + *$2 + "' deja a fost declarat.";
+                                yyerror(msg.c_str()); exit(1); 
+                            }
+                            currentTable->insert(*$2, *$1, "variable"); }
                           | data_type IDENTIFIER ASSIGN expression
                           { 
+                            Symbol* s = currentTable->lookup(*$2); 
+                            if(s) {
+                                std::string msg = "Eroare: Identificatorul '" + *$2 + "' deja a fost declarat.";
+                                yyerror(msg.c_str()); exit(1); 
+                            }
                               log_syntax("Declaratie Variabila Locala recunoscuta.");
                               currentTable->insert(*$2, *$1, "variable"); 
                               checkTypes(*$1, $4->nodeType, "init"); 
-                              $4->evaluate(currentTable); // Evaluare la inițializare
+                              $4->evaluate(currentTable); 
                           }
                           ;
 
@@ -233,6 +253,10 @@ assignment_statement: IDENTIFIER ASSIGN expression
                     { 
                         log_syntax("Assignment simplu recunoscut: " + *($1));
                         Symbol* s = currentTable->lookup(*$1); 
+                        if(!s) {
+                            std::string msg = "Eroare: Identificatorul '" + *$1 + "' nu a fost declarat.";
+                            yyerror(msg.c_str()); exit(1); 
+                        }
                         checkTypes(s->type, $3->nodeType, "atribuire"); 
                         $$ = new ASTNode(":=", s->type, new ASTNode(*$1, s->type), $3);
                     }
@@ -269,8 +293,31 @@ return_statement: RETURN_KEY expression
 
 function_call_statement: IDENTIFIER LPAREN argument_list RPAREN
                        { 
+                            Symbol* s = currentTable->lookup(*$1);
+                            if (!s) {
+                                std::string msg = "Eroare: Functia '" + *$1 + "' nu a fost declarata.";
+                                yyerror(msg.c_str()); exit(1);
+                            }
+
+                            if (s->paramTypes.size() != $3->size()) {
+                                std::string msg = "Eroare: Functia '" + *$1 + "' asteapta " + 
+                                                std::to_string(s->paramTypes.size()) + 
+                                                " argumente, dar s-au primit " + std::to_string($3->size());
+                                yyerror(msg.c_str()); exit(1);
+                            }
+
+                            for (size_t i = 0; i < $3->size(); ++i) {
+                                if (s->paramTypes[i] != (*$3)[i]) {
+                                    std::string msg = "Eroare: Tip invalid pentru argumentul " + std::to_string(i+1) + 
+                                                    " al functiei '" + *$1 + "' (Asteptat: " + 
+                                                    s->paramTypes[i] + ", Primit: " + (*$3)[i] + ")";
+                                    yyerror(msg.c_str()); exit(1); 
+                                }
+                            }
+
+                            $$ = new ASTNode("OTHER", s->type);
+                            log_syntax("Apel functie verificat semantic: " + *$1);
                            log_syntax("Apel Functie simpla recunoscut: " + *($1));
-                           Symbol* s = currentTable->lookup(*$1); 
                            $$ = new ASTNode("OTHER", (s ? s->type : "void"));
                        }
                        | object_access LPAREN argument_list RPAREN 
@@ -298,8 +345,26 @@ argument_list: expression
 
 object_access: IDENTIFIER DOT IDENTIFIER 
              { 
-                 log_syntax("Object Access recunoscut: " + *($1) + "." + *($3));
-                 $$ = new ASTNode("OTHER", "int");
+                 Symbol* obj = currentTable->lookup(*$1);
+                 if (!obj) { 
+                     std::string msg = "Eroare: Obiectul '" + *$1 + "' nu a fost declarat.";
+                     yyerror(msg.c_str()); exit(1); 
+                 }
+
+                 if (classScopes.find(obj->type) == classScopes.end()) {
+                     std::string msg = "Eroare: '" + *$1 + "' (tip " + obj->type + ") nu este o instanta de clasa.";
+                     yyerror(msg.c_str()); exit(1);
+                 }
+
+                 SymbolTable* targetClassTable = classScopes[obj->type];
+                 Symbol* member = targetClassTable->lookupStrict(*$3);
+                 if (!member) {
+                     std::string msg = "Eroare: Membrul '" + *$3 + "' nu exista in clasa '" + obj->type + "'.";
+                     yyerror(msg.c_str()); exit(1);
+                 }
+
+                 log_syntax("Object Access verificat: " + *($1) + "." + *($3));
+                 $$ = new ASTNode(*$3, member->type);
              }
              ;
 

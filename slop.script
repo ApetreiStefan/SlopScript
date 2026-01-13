@@ -14,7 +14,7 @@ int a;
 int b;
 
 SLOP{
-    Amogus(2,0);
+    Amogus(2.0,0);
     vec.a = 3 - 2;
     vec.func(3);
     Print(3 * 2 + 1);
