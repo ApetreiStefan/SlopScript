@@ -86,7 +86,7 @@ void finalize_program() {
     std::cout << "\n[Sistem] Executie si evaluare AST finalizate." << std::endl;
 }
 
-#line 90 "parser.tab.cpp"
+#line 90 "parser.tab.cp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -109,7 +109,7 @@ void finalize_program() {
 #  endif
 # endif
 
-#include "parser.tab.hpp"
+#include "parser.tab.hp"
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -1284,7 +1284,7 @@ yyreduce:
            log_syntax("Program complet recunoscut."); 
            finalize_program();
        }
-#line 1288 "parser.tab.cpp"
+#line 1288 "parser.tab.cp"
     break;
 
   case 7: /* $@1: %empty  */
@@ -1295,7 +1295,7 @@ yyreduce:
                     classScopes[*(yyvsp[-1].strVal)] = newScope;
                     currentTable = newScope;
                 }
-#line 1299 "parser.tab.cpp"
+#line 1299 "parser.tab.cp"
     break;
 
   case 8: /* class_definition: CLASS_KEY IDENTIFIER LBRACE $@1 class_body RBRACE  */
@@ -1304,7 +1304,7 @@ yyreduce:
                     currentTable = currentTable->getParent();
                     log_syntax("Definitie Clasa: " + *((yyvsp[-4].strVal)) + " recunoscuta."); 
                 }
-#line 1308 "parser.tab.cpp"
+#line 1308 "parser.tab.cp"
     break;
 
   case 12: /* variable_definition: data_type IDENTIFIER SEMICOLON  */
@@ -1318,7 +1318,7 @@ yyreduce:
                        log_syntax("Declaratie Variabila recunoscuta: " + *((yyvsp[-2].strVal)) + " " + *((yyvsp[-1].strVal))); 
                        currentTable->insert(*(yyvsp[-1].strVal), *(yyvsp[-2].strVal), "variable");
                    }
-#line 1322 "parser.tab.cpp"
+#line 1322 "parser.tab.cp"
     break;
 
   case 13: /* field_declaration: data_type IDENTIFIER SEMICOLON  */
@@ -1332,7 +1332,7 @@ yyreduce:
                      log_syntax("Declaratie Camp/Field recunoscuta: " + *((yyvsp[-2].strVal)) + " " + *((yyvsp[-1].strVal))); 
                      currentTable->insert(*(yyvsp[-1].strVal), *(yyvsp[-2].strVal), "field");
                  }
-#line 1336 "parser.tab.cpp"
+#line 1336 "parser.tab.cp"
     break;
 
   case 14: /* $@2: %empty  */
@@ -1340,7 +1340,7 @@ yyreduce:
                                                {
                     currentTable = new SymbolTable(currentTable, "method_" + *(yyvsp[-1].strVal));
                  }
-#line 1344 "parser.tab.cpp"
+#line 1344 "parser.tab.cp"
     break;
 
   case 15: /* $@3: %empty  */
@@ -1348,7 +1348,7 @@ yyreduce:
                                          {
                     currentTable->getParent()->insert(*(yyvsp[-4].strVal), *(yyvsp[-5].strVal), "method", *(yyvsp[-1].typeList));
                  }
-#line 1352 "parser.tab.cpp"
+#line 1352 "parser.tab.cp"
     break;
 
   case 16: /* method_definition: data_type IDENTIFIER LPAREN $@2 parameter_list RPAREN $@3 block  */
@@ -1357,7 +1357,7 @@ yyreduce:
                     currentTable = currentTable->getParent();
                     log_syntax("Definitie Metoda: " + *((yyvsp[-7].strVal)) + " " + *((yyvsp[-6].strVal))); 
                  }
-#line 1361 "parser.tab.cpp"
+#line 1361 "parser.tab.cp"
     break;
 
   case 17: /* $@4: %empty  */
@@ -1365,7 +1365,7 @@ yyreduce:
                                                {
                     currentTable = new SymbolTable(currentTable, "method_" + *(yyvsp[-1].strVal));
                  }
-#line 1369 "parser.tab.cpp"
+#line 1369 "parser.tab.cp"
     break;
 
   case 18: /* $@5: %empty  */
@@ -1373,7 +1373,7 @@ yyreduce:
                                          {
                     currentTable->getParent()->insert(*(yyvsp[-4].strVal), "void", "method", *(yyvsp[-1].typeList));
                  }
-#line 1377 "parser.tab.cpp"
+#line 1377 "parser.tab.cp"
     break;
 
   case 19: /* method_definition: VOID_TYPE IDENTIFIER LPAREN $@4 parameter_list RPAREN $@5 block  */
@@ -1382,7 +1382,7 @@ yyreduce:
                     currentTable = currentTable->getParent();
                     log_syntax("Definitie Metoda VOID recunoscuta: " + *((yyvsp[-6].strVal))); 
                  }
-#line 1386 "parser.tab.cpp"
+#line 1386 "parser.tab.cp"
     break;
 
   case 20: /* $@6: %empty  */
@@ -1390,7 +1390,7 @@ yyreduce:
                                                  {
                         currentTable = new SymbolTable(currentTable, "func_" + *(yyvsp[-1].strVal));
                     }
-#line 1394 "parser.tab.cpp"
+#line 1394 "parser.tab.cp"
     break;
 
   case 21: /* $@7: %empty  */
@@ -1398,7 +1398,7 @@ yyreduce:
                                             {
                         globalTable->insert(*(yyvsp[-4].strVal), *(yyvsp[-5].strVal), "function", *(yyvsp[-1].typeList));
                     }
-#line 1402 "parser.tab.cpp"
+#line 1402 "parser.tab.cp"
     break;
 
   case 22: /* function_definition: data_type IDENTIFIER LPAREN $@6 parameter_list RPAREN $@7 block  */
@@ -1407,7 +1407,7 @@ yyreduce:
                        currentTable = currentTable->getParent();
                        log_syntax("Definitie Functie: " + *((yyvsp[-7].strVal)) + " " + *((yyvsp[-6].strVal))); 
                    }
-#line 1411 "parser.tab.cpp"
+#line 1411 "parser.tab.cp"
     break;
 
   case 23: /* $@8: %empty  */
@@ -1415,7 +1415,7 @@ yyreduce:
                                                  {
                         currentTable = new SymbolTable(currentTable, "func_" + *(yyvsp[-1].strVal));
                     }
-#line 1419 "parser.tab.cpp"
+#line 1419 "parser.tab.cp"
     break;
 
   case 24: /* $@9: %empty  */
@@ -1423,7 +1423,7 @@ yyreduce:
                                             {
                         globalTable->insert(*(yyvsp[-4].strVal), "void", "function", *(yyvsp[-1].typeList));
                     }
-#line 1427 "parser.tab.cpp"
+#line 1427 "parser.tab.cp"
     break;
 
   case 25: /* function_definition: VOID_TYPE IDENTIFIER LPAREN $@8 parameter_list RPAREN $@9 block  */
@@ -1432,7 +1432,7 @@ yyreduce:
                        currentTable = currentTable->getParent();
                        log_syntax("Definitie Functie VOID recunoscuta: " + *((yyvsp[-6].strVal))); 
                    }
-#line 1436 "parser.tab.cpp"
+#line 1436 "parser.tab.cp"
     break;
 
   case 26: /* parameter_list: parameter  */
@@ -1441,7 +1441,7 @@ yyreduce:
                   (yyval.typeList) = new std::vector<std::string>(); 
                   (yyval.typeList)->push_back(*(yyvsp[0].strVal)); 
               }
-#line 1445 "parser.tab.cpp"
+#line 1445 "parser.tab.cp"
     break;
 
   case 27: /* parameter_list: parameter_list COMMA parameter  */
@@ -1450,7 +1450,7 @@ yyreduce:
                   (yyvsp[-2].typeList)->push_back(*(yyvsp[0].strVal)); 
                   (yyval.typeList) = (yyvsp[-2].typeList); 
               }
-#line 1454 "parser.tab.cpp"
+#line 1454 "parser.tab.cp"
     break;
 
   case 28: /* parameter_list: %empty  */
@@ -1458,7 +1458,7 @@ yyreduce:
               { 
                   (yyval.typeList) = new std::vector<std::string>(); 
               }
-#line 1462 "parser.tab.cpp"
+#line 1462 "parser.tab.cp"
     break;
 
   case 29: /* parameter: data_type IDENTIFIER  */
@@ -1467,7 +1467,7 @@ yyreduce:
              currentTable->insert(*(yyvsp[0].strVal), *(yyvsp[-1].strVal), "parameter");
              (yyval.strVal) = (yyvsp[-1].strVal);
          }
-#line 1471 "parser.tab.cpp"
+#line 1471 "parser.tab.cp"
     break;
 
   case 30: /* $@10: %empty  */
@@ -1475,7 +1475,7 @@ yyreduce:
                             {
                 currentTable = new SymbolTable(currentTable, "main");
             }
-#line 1479 "parser.tab.cpp"
+#line 1479 "parser.tab.cp"
     break;
 
   case 31: /* main_block: MAIN_KEY LBRACE $@10 no_decl_statement_list RBRACE  */
@@ -1484,7 +1484,7 @@ yyreduce:
               currentTable = currentTable->getParent(); 
               log_syntax("Blocul Main recunoscut.");
           }
-#line 1488 "parser.tab.cpp"
+#line 1488 "parser.tab.cp"
     break;
 
   case 34: /* no_decl_statement: assignment_statement SEMICOLON  */
@@ -1492,7 +1492,7 @@ yyreduce:
          { 
              if((yyvsp[-1].astPtr)) (yyvsp[-1].astPtr)->evaluate(currentTable); 
          }
-#line 1496 "parser.tab.cpp"
+#line 1496 "parser.tab.cp"
     break;
 
   case 35: /* no_decl_statement: function_call_statement SEMICOLON  */
@@ -1500,7 +1500,7 @@ yyreduce:
          { 
              if((yyvsp[-1].astPtr)) (yyvsp[-1].astPtr)->evaluate(currentTable); 
          }
-#line 1504 "parser.tab.cpp"
+#line 1504 "parser.tab.cp"
     break;
 
   case 40: /* no_decl_statement: PRINT_CALL LPAREN expression RPAREN SEMICOLON  */
@@ -1510,7 +1510,7 @@ yyreduce:
              pNode->evaluate(currentTable);
              log_syntax("Apel Print(expr) recunoscut.");
          }
-#line 1514 "parser.tab.cpp"
+#line 1514 "parser.tab.cp"
     break;
 
   case 41: /* no_decl_statement: PRINT_CALL LPAREN boolean_expression RPAREN SEMICOLON  */
@@ -1520,55 +1520,55 @@ yyreduce:
              pNode->evaluate(currentTable);
              log_syntax("Apel Print(expr) recunoscut.");
          }
-#line 1524 "parser.tab.cpp"
+#line 1524 "parser.tab.cp"
     break;
 
   case 42: /* no_decl_block: LBRACE no_decl_statement_list RBRACE  */
 #line 214 "parser.y"
          { log_syntax("Block recunoscut."); }
-#line 1530 "parser.tab.cpp"
+#line 1530 "parser.tab.cp"
     break;
 
   case 43: /* data_type: INT_TYPE  */
 #line 217 "parser.y"
                     { (yyval.strVal) = new std::string("int"); }
-#line 1536 "parser.tab.cpp"
+#line 1536 "parser.tab.cp"
     break;
 
   case 44: /* data_type: FLOAT_TYPE  */
 #line 218 "parser.y"
                       { (yyval.strVal) = new std::string("float"); }
-#line 1542 "parser.tab.cpp"
+#line 1542 "parser.tab.cp"
     break;
 
   case 45: /* data_type: STRING_TYPE  */
 #line 219 "parser.y"
                        { (yyval.strVal) = new std::string("string"); }
-#line 1548 "parser.tab.cpp"
+#line 1548 "parser.tab.cp"
     break;
 
   case 46: /* data_type: BOOL_TYPE  */
 #line 220 "parser.y"
                      { (yyval.strVal) = new std::string("bool"); }
-#line 1554 "parser.tab.cpp"
+#line 1554 "parser.tab.cp"
     break;
 
   case 47: /* data_type: IDENTIFIER  */
 #line 221 "parser.y"
                       { (yyval.strVal) = (yyvsp[0].strVal); }
-#line 1560 "parser.tab.cpp"
+#line 1560 "parser.tab.cp"
     break;
 
   case 50: /* statement: assignment_statement SEMICOLON  */
 #line 228 "parser.y"
                                           { if((yyvsp[-1].astPtr)) (yyvsp[-1].astPtr)->evaluate(currentTable); }
-#line 1566 "parser.tab.cpp"
+#line 1566 "parser.tab.cp"
     break;
 
   case 51: /* statement: function_call_statement SEMICOLON  */
 #line 229 "parser.y"
                                              { if((yyvsp[-1].astPtr)) (yyvsp[-1].astPtr)->evaluate(currentTable); }
-#line 1572 "parser.tab.cpp"
+#line 1572 "parser.tab.cp"
     break;
 
   case 57: /* local_variable_declaration: data_type IDENTIFIER  */
@@ -1579,7 +1579,7 @@ yyreduce:
                                 yyerror(msg.c_str()); exit(1); 
                             }
                             currentTable->insert(*(yyvsp[0].strVal), *(yyvsp[-1].strVal), "variable"); }
-#line 1583 "parser.tab.cpp"
+#line 1583 "parser.tab.cp"
     break;
 
   case 58: /* local_variable_declaration: data_type IDENTIFIER ASSIGN expression  */
@@ -1595,7 +1595,7 @@ yyreduce:
                               checkTypes(*(yyvsp[-3].strVal), (yyvsp[0].astPtr)->nodeType, "init"); 
                               (yyvsp[0].astPtr)->evaluate(currentTable); 
                           }
-#line 1599 "parser.tab.cpp"
+#line 1599 "parser.tab.cp"
     break;
 
   case 59: /* assignment_statement: IDENTIFIER ASSIGN expression  */
@@ -1610,7 +1610,7 @@ yyreduce:
                         checkTypes(s->type, (yyvsp[0].astPtr)->nodeType, "atribuire"); 
                         (yyval.astPtr) = new ASTNode(":=", s->type, new ASTNode(*(yyvsp[-2].strVal), s->type), (yyvsp[0].astPtr));
                     }
-#line 1614 "parser.tab.cpp"
+#line 1614 "parser.tab.cp"
     break;
 
   case 60: /* assignment_statement: object_access ASSIGN expression  */
@@ -1620,19 +1620,19 @@ yyreduce:
                         checkTypes((yyvsp[-2].astPtr)->nodeType, (yyvsp[0].astPtr)->nodeType, "atribuire obiect"); 
                         (yyval.astPtr) = new ASTNode(":=", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr));
                     }
-#line 1624 "parser.tab.cpp"
+#line 1624 "parser.tab.cp"
     break;
 
   case 61: /* if_statement: IF_KEY LPAREN boolean_expression RPAREN no_decl_block  */
 #line 278 "parser.y"
             { log_syntax("If statement recunoscut."); }
-#line 1630 "parser.tab.cpp"
+#line 1630 "parser.tab.cp"
     break;
 
   case 62: /* while_statement: WHILE_KEY LPAREN boolean_expression RPAREN no_decl_block  */
 #line 282 "parser.y"
                { log_syntax("While statement recunoscut."); }
-#line 1636 "parser.tab.cpp"
+#line 1636 "parser.tab.cp"
     break;
 
   case 63: /* $@11: %empty  */
@@ -1640,7 +1640,7 @@ yyreduce:
               {
             currentTable = new SymbolTable(currentTable, "block_" + std::to_string(yylineno));
         }
-#line 1644 "parser.tab.cpp"
+#line 1644 "parser.tab.cp"
     break;
 
   case 64: /* block: LBRACE $@11 statement_list RBRACE  */
@@ -1649,19 +1649,19 @@ yyreduce:
          currentTable = currentTable->getParent(); 
          log_syntax("Block recunoscut."); 
      }
-#line 1653 "parser.tab.cpp"
+#line 1653 "parser.tab.cp"
     break;
 
   case 65: /* return_statement: RETURN_KEY expression  */
 #line 295 "parser.y"
                 { log_syntax("Return cu expresie recunoscut."); }
-#line 1659 "parser.tab.cpp"
+#line 1659 "parser.tab.cp"
     break;
 
   case 66: /* return_statement: RETURN_KEY  */
 #line 297 "parser.y"
                 { log_syntax("Return VOID recunoscut."); }
-#line 1665 "parser.tab.cpp"
+#line 1665 "parser.tab.cp"
     break;
 
   case 67: /* function_call_statement: IDENTIFIER LPAREN argument_list RPAREN  */
@@ -1692,7 +1692,7 @@ yyreduce:
                             (yyval.astPtr) = new ASTNode("OTHER", s->type);
                             log_syntax("Apel functie verificat semantic: " + *(yyvsp[-3].strVal));
                        }
-#line 1696 "parser.tab.cpp"
+#line 1696 "parser.tab.cp"
     break;
 
   case 68: /* function_call_statement: object_access LPAREN argument_list RPAREN  */
@@ -1701,7 +1701,7 @@ yyreduce:
                            log_syntax("Apel Metoda recunoscut.");
                            (yyval.astPtr) = new ASTNode("OTHER", (yyvsp[-3].astPtr)->nodeType);
                        }
-#line 1705 "parser.tab.cpp"
+#line 1705 "parser.tab.cp"
     break;
 
   case 69: /* argument_list: expression  */
@@ -1710,7 +1710,7 @@ yyreduce:
                  (yyval.typeList) = new std::vector<std::string>(); 
                  (yyval.typeList)->push_back((yyvsp[0].astPtr)->nodeType); 
              }
-#line 1714 "parser.tab.cpp"
+#line 1714 "parser.tab.cp"
     break;
 
   case 70: /* argument_list: argument_list COMMA expression  */
@@ -1719,7 +1719,7 @@ yyreduce:
                  (yyvsp[-2].typeList)->push_back((yyvsp[0].astPtr)->nodeType); 
                  (yyval.typeList) = (yyvsp[-2].typeList); 
              }
-#line 1723 "parser.tab.cpp"
+#line 1723 "parser.tab.cp"
     break;
 
   case 71: /* argument_list: %empty  */
@@ -1727,7 +1727,7 @@ yyreduce:
              { 
                  (yyval.typeList) = new std::vector<std::string>(); 
              }
-#line 1731 "parser.tab.cpp"
+#line 1731 "parser.tab.cp"
     break;
 
   case 72: /* object_access: IDENTIFIER DOT IDENTIFIER  */
@@ -1754,91 +1754,91 @@ yyreduce:
                  log_syntax("Object Access verificat: " + *((yyvsp[-2].strVal)) + "." + *((yyvsp[0].strVal)));
                  (yyval.astPtr) = new ASTNode(*(yyvsp[0].strVal), member->type);
              }
-#line 1758 "parser.tab.cpp"
+#line 1758 "parser.tab.cp"
     break;
 
   case 73: /* boolean_expression: expression OP_LT expression  */
 #line 375 "parser.y"
                                                 { (yyval.astPtr) = new ASTNode("<", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1764 "parser.tab.cpp"
+#line 1764 "parser.tab.cp"
     break;
 
   case 74: /* boolean_expression: expression OP_GT expression  */
 #line 376 "parser.y"
                                                 { (yyval.astPtr) = new ASTNode(">", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1770 "parser.tab.cpp"
+#line 1770 "parser.tab.cp"
     break;
 
   case 75: /* boolean_expression: expression OP_EQ expression  */
 #line 377 "parser.y"
                                                 { (yyval.astPtr) = new ASTNode("==", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1776 "parser.tab.cpp"
+#line 1776 "parser.tab.cp"
     break;
 
   case 76: /* boolean_expression: expression OP_NEQ expression  */
 #line 378 "parser.y"
                                                  { (yyval.astPtr) = new ASTNode("!=", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1782 "parser.tab.cpp"
+#line 1782 "parser.tab.cp"
     break;
 
   case 77: /* boolean_expression: boolean_expression OP_AND boolean_expression  */
 #line 379 "parser.y"
                                                                  { (yyval.astPtr) = new ASTNode("&&", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1788 "parser.tab.cpp"
+#line 1788 "parser.tab.cp"
     break;
 
   case 78: /* boolean_expression: boolean_expression OP_OR boolean_expression  */
 #line 380 "parser.y"
                                                                 { (yyval.astPtr) = new ASTNode("||", "bool", (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1794 "parser.tab.cpp"
+#line 1794 "parser.tab.cp"
     break;
 
   case 79: /* boolean_expression: LPAREN boolean_expression RPAREN  */
 #line 381 "parser.y"
                                                      { (yyval.astPtr) = (yyvsp[-1].astPtr); }
-#line 1800 "parser.tab.cpp"
+#line 1800 "parser.tab.cp"
     break;
 
   case 80: /* boolean_expression: BOOL_LITERAL  */
 #line 382 "parser.y"
                                  { (yyval.astPtr) = new ASTNode("bool_lit", "bool"); }
-#line 1806 "parser.tab.cpp"
+#line 1806 "parser.tab.cp"
     break;
 
   case 81: /* expression: expression OP_ADD term  */
 #line 385 "parser.y"
                                    { (yyval.astPtr) = new ASTNode("+", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1812 "parser.tab.cpp"
+#line 1812 "parser.tab.cp"
     break;
 
   case 82: /* expression: expression OP_SUB term  */
 #line 386 "parser.y"
                                    { (yyval.astPtr) = new ASTNode("-", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1818 "parser.tab.cpp"
+#line 1818 "parser.tab.cp"
     break;
 
   case 83: /* expression: term  */
 #line 387 "parser.y"
                  { (yyval.astPtr) = (yyvsp[0].astPtr); }
-#line 1824 "parser.tab.cpp"
+#line 1824 "parser.tab.cp"
     break;
 
   case 84: /* term: term OP_MUL factor  */
 #line 390 "parser.y"
                          { (yyval.astPtr) = new ASTNode("*", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1830 "parser.tab.cpp"
+#line 1830 "parser.tab.cp"
     break;
 
   case 85: /* term: term OP_DIV factor  */
 #line 391 "parser.y"
                          { (yyval.astPtr) = new ASTNode("/", (yyvsp[-2].astPtr)->nodeType, (yyvsp[-2].astPtr), (yyvsp[0].astPtr)); }
-#line 1836 "parser.tab.cpp"
+#line 1836 "parser.tab.cp"
     break;
 
   case 86: /* term: factor  */
 #line 392 "parser.y"
              { (yyval.astPtr) = (yyvsp[0].astPtr); }
-#line 1842 "parser.tab.cpp"
+#line 1842 "parser.tab.cp"
     break;
 
   case 87: /* factor: IDENTIFIER  */
@@ -1848,13 +1848,13 @@ yyreduce:
             Symbol* s = currentTable->lookup(*(yyvsp[0].strVal)); 
             (yyval.astPtr) = new ASTNode(*(yyvsp[0].strVal), (s ? s->type : "int"));
        }
-#line 1852 "parser.tab.cpp"
+#line 1852 "parser.tab.cp"
     break;
 
   case 88: /* factor: object_access  */
 #line 401 "parser.y"
                       { log_syntax("Expresie: Acces Obiect"); (yyval.astPtr) = (yyvsp[0].astPtr); }
-#line 1858 "parser.tab.cpp"
+#line 1858 "parser.tab.cp"
     break;
 
   case 89: /* factor: INTEGER_LITERAL  */
@@ -1863,7 +1863,7 @@ yyreduce:
           log_syntax("Expresie: Literal Int"); 
           (yyval.astPtr) = new ASTNode(std::to_string((yyvsp[0].intVal)), "int");
       }
-#line 1867 "parser.tab.cpp"
+#line 1867 "parser.tab.cp"
     break;
 
   case 90: /* factor: FLOAT_LITERAL  */
@@ -1872,23 +1872,23 @@ yyreduce:
           log_syntax("Expresie: Literal Float"); 
           (yyval.astPtr) = new ASTNode(std::to_string((yyvsp[0].floatVal)), "float"); 
       }
-#line 1876 "parser.tab.cpp"
+#line 1876 "parser.tab.cp"
     break;
 
   case 91: /* factor: function_call_statement  */
 #line 412 "parser.y"
                                 { log_syntax("Expresie: Apel Functie"); (yyval.astPtr) = (yyvsp[0].astPtr); }
-#line 1882 "parser.tab.cpp"
+#line 1882 "parser.tab.cp"
     break;
 
   case 92: /* factor: LPAREN expression RPAREN  */
 #line 413 "parser.y"
                                  { log_syntax("Factor: Paranteze"); (yyval.astPtr) = (yyvsp[-1].astPtr); }
-#line 1888 "parser.tab.cpp"
+#line 1888 "parser.tab.cp"
     break;
 
 
-#line 1892 "parser.tab.cpp"
+#line 1892 "parser.tab.cp"
 
       default: break;
     }

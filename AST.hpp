@@ -37,7 +37,7 @@ public:
                 std::cout << "\t[PRINT OUTPUT]: ";
                 if (res.type == "int") std::cout << std::get<int>(res.val);
                 else if (res.type == "float") std::cout << std::get<float>(res.val);
-                else if (res.type == "bool") std::cout << (std::get<bool>(res.val) ? "true" : "false");
+                else if (res.type == "bool") std::cout << (std::get<bool>(res.val) ? "true" : "false" );
                 else if (res.type == "string") std::cout << std::get<std::string>(res.val);
                 std::cout << std::endl;
                 return res;
@@ -48,9 +48,10 @@ public:
                 if (isdigit(label[0])) {
                     if (nodeType == "int") return ValueWrapper(std::stoi(label));
                     if (nodeType == "float") return ValueWrapper(std::stof(label));
+                    if (nodeType == "bool") return ValueWrapper(std::stoi(label));
                 }
 
-                return (nodeType == "float" ? ValueWrapper(0.0f) : ValueWrapper(0)); 
+                return (nodeType == "float" ? ValueWrapper(0.0f) : ValueWrapper(0));
             }
     
             ValueWrapper lVal = left->evaluate(table);
@@ -83,6 +84,51 @@ public:
                 }
                 if (nodeType == "int") return ValueWrapper(std::get<int>(lVal.val) / std::get<int>(rVal.val));
                 return ValueWrapper(std::get<float>(lVal.val) / std::get<float>(rVal.val));
+            }
+
+            
+            if (label == "<") {
+                if (lVal.type != rVal.type) {
+                    throw std::runtime_error("Executie oprita: Incompatibilitate de tip la calcul.");
+                }
+                if (nodeType == "bool" && lVal.nodeType == "float");
+                if (nodeType == "bool") return ValueWrapper(std::get<int>(lVal.val) < std::get<int>(rVal.val));
+                throw std::runtime_error("Ceva e fishy la expresias booleana.");
+            }
+            if (label == ">") {
+                if (lVal.type != rVal.type) {
+                    throw std::runtime_error("Executie oprita: Incompatibilitate de tip la calcul.");
+                }
+                if (nodeType == "bool") return ValueWrapper(std::get<int>(lVal.val) > std::get<int>(rVal.val));
+                throw std::runtime_error("Ceva e fishy la expresias booleana.");
+            }
+            if (label == "==") {
+                if (lVal.type != rVal.type) {
+                    throw std::runtime_error("Executie oprita: Incompatibilitate de tip la calcul.");
+                }
+                if (nodeType == "bool") return ValueWrapper(std::get<int>(lVal.val) == std::get<int>(rVal.val));
+                throw std::runtime_error("Ceva e fishy la expresias booleana.");
+            }
+            if (label == "!=") {
+                if (lVal.type != rVal.type) {
+                    throw std::runtime_error("Executie oprita: Incompatibilitate de tip la calcul.");
+                }
+                if (nodeType == "bool") return ValueWrapper(std::get<int>(lVal.val) != std::get<int>(rVal.val));
+                throw std::runtime_error("Ceva e fishy la expresias booleana.");
+            }
+            if (label == "&&") {
+                if (lVal.type != rVal.type) {
+                    throw std::runtime_error("Executie oprita: Incompatibilitate de tip la calcul.");
+                }
+                if (nodeType == "bool") return ValueWrapper(std::get<bool>(lVal.val) && std::get<bool>(rVal.val));
+                throw std::runtime_error("Ceva e fishy la expresias booleana.");
+            }
+            if (label == "||") {
+                if (lVal.type != rVal.type) {
+                    throw std::runtime_error("Executie oprita: Incompatibilitate de tip la calcul.");
+                }
+                if (nodeType == "bool") return ValueWrapper(std::get<bool>(lVal.val) || std::get<bool>(rVal.val));
+                throw std::runtime_error("Ceva e fishy la expresias booleana.");
             }
     
             return ValueWrapper();

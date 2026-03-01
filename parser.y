@@ -186,17 +186,23 @@ no_decl_statement_list: no_decl_statement_list no_decl_statement
 
 no_decl_statement: assignment_statement SEMICOLON
          { 
-             if($1) $1->evaluate(currentTable); // Evaluare AST pentru orice atribuire (IV.2)
+             if($1) $1->evaluate(currentTable); 
          } 
          | function_call_statement SEMICOLON
          { 
-             if($1) $1->evaluate(currentTable); // Evaluare AST pentru apeluri
+             if($1) $1->evaluate(currentTable); 
          }
          | if_statement
          | while_statement
          | block
          | return_statement SEMICOLON
          | PRINT_CALL LPAREN expression RPAREN SEMICOLON
+         {
+             ASTNode* pNode = new ASTNode("Print", "void", $3);
+             pNode->evaluate(currentTable);
+             log_syntax("Apel Print(expr) recunoscut.");
+         }
+         | PRINT_CALL LPAREN boolean_expression RPAREN SEMICOLON
          {
              ASTNode* pNode = new ASTNode("Print", "void", $3);
              pNode->evaluate(currentTable);
@@ -317,13 +323,11 @@ function_call_statement: IDENTIFIER LPAREN argument_list RPAREN
 
                             $$ = new ASTNode("OTHER", s->type);
                             log_syntax("Apel functie verificat semantic: " + *$1);
-                           log_syntax("Apel Functie simpla recunoscut: " + *($1));
-                           $$ = new ASTNode("OTHER", (s ? s->type : "void"));
                        }
                        | object_access LPAREN argument_list RPAREN 
                        { 
                            log_syntax("Apel Metoda recunoscut.");
-                           $$ = new ASTNode("OTHER", "void");
+                           $$ = new ASTNode("OTHER", $1->nodeType);
                        }
                        ;
 
